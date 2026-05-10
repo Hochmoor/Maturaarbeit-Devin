@@ -13,6 +13,7 @@ black = (0, 0, 0)
 # Create fullscreen window at desktop resolution
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 screen_width, screen_height = screen.get_size()
+block_size = screen_height / 36
 
 # Player settings
 player_size = 40
@@ -23,11 +24,11 @@ mov_y = 0
 drag = 1
 
 stein_img = pygame.image.load("stein.jpg").convert_alpha()
-stein_img = pygame.transform.smoothscale(stein_img, (40, 40))
+stein_img = pygame.transform.smoothscale(stein_img, (block_size, block_size))
 gras_img = pygame.image.load("gras.jpg").convert_alpha()
-gras_img = pygame.transform.smoothscale(gras_img, (40, 40))
+gras_img = pygame.transform.smoothscale(gras_img, (block_size, block_size))
 erde_img = pygame.image.load("erde.jpg").convert_alpha()
-erde_img = pygame.transform.smoothscale(erde_img, (40, 40))
+erde_img = pygame.transform.smoothscale(erde_img, (block_size, block_size))
 
 
 # WORLD GENERATION
