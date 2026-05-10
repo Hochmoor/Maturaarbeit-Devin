@@ -30,6 +30,8 @@ gras_img = pygame.transform.smoothscale(gras_img, (block_size, block_size))
 erde_img = pygame.image.load("erde.jpg").convert_alpha()
 erde_img = pygame.transform.smoothscale(erde_img, (block_size, block_size))
 
+print("block size", block_size)
+
 
 # WORLD GENERATION
 import random
@@ -118,17 +120,17 @@ while not done:
     for z in range(64):
         for y in range(initial_y[z]+ other_data):
             if blocks_pos[z][y + other_data] == 0:
-                screen.blit(stein_img, ((z - pos_x) *40, 1400 - y*40))
+                screen.blit(stein_img, ((z - pos_x) *block_size, screen_height- block_size - y*block_size))
 
     for z in range(64):
         for y in range(initial_y[z] + other_data):
             if blocks_pos[z][y + other_data] == 1:
-                screen.blit(gras_img, ((z - pos_x)*40, 1400 - y*40))
+                screen.blit(gras_img, ((z - pos_x)*block_size, screen_height- block_size - y*block_size))
 
     for z in range(64):
         for y in range(initial_y[z]+ other_data):
             if blocks_pos[z][y + other_data] == 2:
-                screen.blit(erde_img, ((z - pos_x)*40, 1400 - y*40))
+                screen.blit(erde_img, ((z - pos_x)*block_size, screen_height- block_size - y*block_size))
 
 
     pygame.draw.rect(screen, black, (pos_x, pos_y, player_size, player_size))
