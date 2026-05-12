@@ -5,7 +5,7 @@ import math
 # --- Configuration ---
 WIDTH, HEIGHT = 800, 400
 FPS = 60
-SCALE = 0.005  # How "stretched" the hills are (Frequency)
+SCALE = 0.05  # How "stretched" the hills are (Frequency)
 AMPLITUDE = 100  # How tall the hills are
 SPEED = 2  # Scrolling speed
 

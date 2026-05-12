@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a3fa32d1-8a74-4b1b-bbc5-bcece65b4a4b" name="Changes" comment="Adapting to monitor resolution 10.05.2026">
+    <list default="true" id="a3fa32d1-8a74-4b1b-bbc5-bcece65b4a4b" name="Changes" comment="Subpixel rendering (white horizontal lines bug) solution + fixing drag 12.05.2026">
+      <change afterPath="$PROJECT_DIR$/Version 1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prototype X.py" beforeDir="false" afterPath="$PROJECT_DIR$/prototype X.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Prototype XI.py" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype XI.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,12 +30,12 @@
     &quot;assignee&quot;: &quot;Hochmoor&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Hochmoor/Maturaarbeit-Devin",
-    "accountId": "2679848a-6199-442a-976f-9e1957d6c7a4"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Hochmoor/Maturaarbeit-Devin&quot;,
+    &quot;accountId&quot;: &quot;2679848a-6199-442a-976f-9e1957d6c7a4&quot;
   }
-}]]></component>
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Prototype IIX.py" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -49,34 +50,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.Prorotype V.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype I.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype III.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype IIX.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype IV.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype IX.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype VI.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype VII.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype VIII.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype XI.executor&quot;: &quot;Run&quot;,
-    &quot;Python.prototype X.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;ai.playground.ignore.import.keys.banner.in.settings&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/druet/PycharmProjects/Maturaarbeit&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.Prorotype V.executor": "Run",
+    "Python.Prototype I.executor": "Run",
+    "Python.Prototype III.executor": "Run",
+    "Python.Prototype IIX.executor": "Run",
+    "Python.Prototype IV.executor": "Run",
+    "Python.Prototype IX.executor": "Run",
+    "Python.Prototype VI.executor": "Run",
+    "Python.Prototype VII.executor": "Run",
+    "Python.Prototype VIII.executor": "Run",
+    "Python.Prototype XI.executor": "Run",
+    "Python.Version 1.executor": "Run",
+    "Python.prototype X.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ai.playground.ignore.import.keys.banner.in.settings": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/druet/PycharmProjects/Maturaarbeit",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\druet\PycharmProjects\Maturaarbeit" />
@@ -115,7 +117,15 @@
       <option name="project" value="LOCAL" />
       <updated>1778417783113</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Subpixel rendering (white horizontal lines bug) solution + fixing drag 12.05.2026">
+      <option name="closed" value="true" />
+      <created>1778569585378</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1778569585378</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -124,7 +134,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial Commit" />
     <MESSAGE value="Adapting to monitor resolution 10.05.2026" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adapting to monitor resolution 10.05.2026" />
+    <MESSAGE value="Subpixel rendering (white horizontal lines bug) solution + fixing drag 12.05.2026" />
+    <option name="LAST_COMMIT_MESSAGE" value="Subpixel rendering (white horizontal lines bug) solution + fixing drag 12.05.2026" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Maturaarbeit$Prototype_I.coverage" NAME="Prototype I Coverage Results" MODIFIED="1767106646819" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
