@@ -13,7 +13,7 @@ black = (0, 0, 0)
 # Create fullscreen window at desktop resolution
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 screen_width, screen_height = screen.get_size()
-block_size = screen_height / 36
+block_size = screen_height // 36
 
 # Player settings
 player_size = 40
@@ -21,7 +21,7 @@ pos_x = 50
 pos_y = screen_height
 mov_x = 0
 mov_y = 0
-drag = 1
+drag = 0.80
 
 stein_img = pygame.image.load("stein.jpg").convert_alpha()
 stein_img = pygame.transform.smoothscale(stein_img, (block_size, block_size))
@@ -92,9 +92,11 @@ done = False
 while not done:
     screen.fill(white)
 
-
     pos_x += mov_x
     pos_y += mov_y
+
+    mov_x *= drag
+    mov_y *= drag
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -113,8 +115,6 @@ while not done:
     if keys[pygame.K_w]:
         mov_y -= 0.2
 
-    mov_x *= drag
-    mov_y *= drag
 
     # DRAWING THE BLOCKS
     for z in range(64):

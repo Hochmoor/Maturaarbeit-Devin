@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a3fa32d1-8a74-4b1b-bbc5-bcece65b4a4b" name="Changes" comment="Initial Commit">
-      <change beforePath="$PROJECT_DIR$/.idea/Maturaarbeit.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Maturaarbeit.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="a3fa32d1-8a74-4b1b-bbc5-bcece65b4a4b" name="Changes" comment="Adapting to monitor resolution 10.05.2026">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/prototype X.py" beforeDir="false" afterPath="$PROJECT_DIR$/prototype X.py" afterDir="false" />
     </list>
@@ -31,12 +29,12 @@
     &quot;assignee&quot;: &quot;Hochmoor&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Hochmoor/Maturaarbeit.git&quot;,
-    &quot;accountId&quot;: &quot;d98a4629-8f49-476c-bd4f-c19b95b5d523&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Hochmoor/Maturaarbeit-Devin",
+    "accountId": "2679848a-6199-442a-976f-9e1957d6c7a4"
   }
-}</component>
+}]]></component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Prototype IIX.py" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -87,7 +85,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-f2b7a9f6281b-6e1f45a539f7-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-253.29346.142" />
+        <option value="bundled-python-sdk-e0ed3721d81e-36ea0e71a18c-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.25410.159" />
       </set>
     </attachedChunks>
   </component>
@@ -109,7 +107,15 @@
       <option name="project" value="LOCAL" />
       <updated>1778331151408</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Adapting to monitor resolution 10.05.2026">
+      <option name="closed" value="true" />
+      <created>1778417783113</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1778417783113</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -117,7 +123,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial Commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial Commit" />
+    <MESSAGE value="Adapting to monitor resolution 10.05.2026" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adapting to monitor resolution 10.05.2026" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Maturaarbeit$Prototype_I.coverage" NAME="Prototype I Coverage Results" MODIFIED="1767106646819" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
