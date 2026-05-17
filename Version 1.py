@@ -1,33 +1,31 @@
-import random
 import pygame
-
-pygame.init()
-
-speed = 60
-clock = pygame.time.Clock()
-
-#Colors
-white = (255, 255, 255)
-black = (0, 0, 0)
+import random
+import math
 
 # Create fullscreen window at desktop resolution
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 screen_width, screen_height = screen.get_size()
 block_size = screen_height // 36
 
-# Player settings
-player_size = block_size
-player_pos_x = screen_width // 2
-player_pos_y = screen_height // 2
+# --- Configuration ---
+FPS = 60
+SCALE = 0.005  # How "stretched" the hills are (Frequency)
+AMPLITUDE = 15  # How tall the hills are
+SPEED = 2  # Scrolling speed
 
-# Movement
-pos_x = 0
-pos_y = screen_height
+# --- Simple 1D Noise Logic ---
+# To keep this "pure Python," we'll use a simple interpolation
+# function to simulate the Perlin effect.
+seed_values = [random.uniform(-1, 1) for _ in range(1000)]
+
+# Player settings
+player_size = 40
+pos_x = 50
+pos_y = 0
 mov_x = 0
 mov_y = 0
 drag = 0.80
 
-#Textures
 stein_img = pygame.image.load("stein.jpg").convert_alpha()
 stein_img = pygame.transform.smoothscale(stein_img, (block_size, block_size))
 gras_img = pygame.image.load("gras.jpg").convert_alpha()
@@ -35,59 +33,46 @@ gras_img = pygame.transform.smoothscale(gras_img, (block_size, block_size))
 erde_img = pygame.image.load("erde.jpg").convert_alpha()
 erde_img = pygame.transform.smoothscale(erde_img, (block_size, block_size))
 
+white = (255, 255, 255)
+black = (0, 0, 0)
 
-# WORLD GENERATION
-
-initial_y = [10]
-
-other_data = 1 # This variable covers all information in the list that is not blocks so if the blocks are displayed it is easier to find the data of the other blocks by offsetting by "other data"
+speed = 60
 
 
-for i in range(64):  # already have 1 value
+def get_noise(x):
+    # Determine the two points on our "ruler" we are between
+    p1 = math.floor(x) % 1000
+    p2 = (p1 + 1) % 1000
+
+    # How far are we between those points (0.0 to 1.0)
+    frac = x - math.floor(x)
+
+    # Smoothstep interpolation (the "Fade" function)
+    t = frac * frac * (3 - 2 * frac)
+
+    # Blend the two random values
+    return seed_values[p1] * (1 - t) + seed_values[p2] * t
 
 
-    if initial_y[i] < 5:
-        initial_y[i] = initial_y[i] + random.randint(0, 3)
-    elif 5 <= initial_y[i] <= 15:
-        initial_y[i] = initial_y[i] + random.randint(-2, 2)
-    else:
-        initial_y[i] = initial_y[i] + random.randint(-3, 0)
+# --- Pygame Setup ---
+pygame.init()
+screen = pygame.display.set_mode((screen_width, screen_height))
+clock = pygame.time.Clock()
+offset = 0
 
-    initial_y.append(initial_y[i])
-
-
-print(initial_y)
-
-blocks_pos = [[] for _ in range(64)]
-for z in range(64):
-    for i in range(initial_y[z] + other_data):
-        blocks_pos[z].append(0)
-
+blocks_pos = [[0 for _ in range(64)] for _ in range(84)]
 print(blocks_pos)
 
-# grass layer
-for z in range(64):
-    blocks_pos[z][initial_y[z]-1 + other_data] = 1
+for z in range(84):
+    x = (z - 10) / 10
+    noise_value = round(get_noise(x) * AMPLITUDE)
+    print(noise_value)
+    blocks_pos[z][40 + noise_value] = 1
+    blocks_pos[z][40 + noise_value - 1 ] = 2
+    blocks_pos[z][40 + noise_value - 2 ] = 2
+    for i in range(40 + noise_value - 2):
+        blocks_pos[z][i] = 3
 
-print(blocks_pos)
-
-# dirt layer
-for z in range(64):
-    if initial_y[z] < 5:
-        dirt_layer = random.randint(1, 2)
-        for y in range (dirt_layer):
-            blocks_pos[z][initial_y[z]-2-y + other_data] = 2
-    elif initial_y[z] >= 5:
-        dirt_layer = random.randint(2, 4)
-        for y in range (dirt_layer):
-            blocks_pos[z][initial_y[z]-2-y + other_data] = 2
-
-print(blocks_pos)
-print(len(blocks_pos))
-
-# add x-coordinate
-for i in range(len(blocks_pos)):
-    blocks_pos[i].insert(0, i)
 print(blocks_pos)
 
 done = False
@@ -109,7 +94,6 @@ while not done:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_d]:
         mov_x += 0.2
-        print(mov_x)
     if keys[pygame.K_a]:
         mov_x -= 0.2
     if keys[pygame.K_s]:
@@ -119,24 +103,24 @@ while not done:
 
 
     # DRAWING THE BLOCKS
-    for z in range(64):
-        for y in range(initial_y[z]+ other_data):
-            if blocks_pos[z][y + other_data] == 0:
-                screen.blit(stein_img, ((z - pos_x) *block_size, screen_height- block_size - y*block_size))
+    for z in range(84):
+        for y in range(64):
+            if blocks_pos[z][y] == 0:
+                continue
 
-    for z in range(64):
-        for y in range(initial_y[z] + other_data):
-            if blocks_pos[z][y + other_data] == 1:
-                screen.blit(gras_img, ((z - pos_x)*block_size, screen_height- block_size - y*block_size))
+            if blocks_pos[z][y] == 1:
+                screen.blit(gras_img, ((z - pos_x)*block_size, screen_height- block_size - y*block_size - (pos_y * block_size)))
 
-    for z in range(64):
-        for y in range(initial_y[z]+ other_data):
-            if blocks_pos[z][y + other_data] == 2:
-                screen.blit(erde_img, ((z - pos_x)*block_size, screen_height- block_size - y*block_size))
+            if blocks_pos[z][y] == 2:
+                screen.blit(erde_img, ((z - pos_x)*block_size, screen_height- block_size - y*block_size - (pos_y * block_size)))
+
+            if blocks_pos[z][y] == 3:
+                screen.blit(stein_img, ((z - pos_x) *block_size, screen_height- block_size - y*block_size - (pos_y * block_size)))
 
 
-    pygame.draw.rect(screen, black, (pos_x, pos_y, player_size, player_size))
+
+
+    pygame.draw.rect(screen, black, (screen_width//2 - 1/2 * block_size, screen_height//2 - 1/2 * block_size, block_size,block_size))
     pygame.display.flip()
     clock.tick(speed)
-
 pygame.quit()
