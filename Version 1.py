@@ -14,14 +14,13 @@ AMPLITUDE = 15  # How tall the hills are
 SPEED = 2  # Scrolling speed
 
 # --- Simple 1D Noise Logic ---
-# To keep this "pure Python," we'll use a simple interpolation
 # function to simulate the Perlin effect.
 seed_values = [random.uniform(-1, 1) for _ in range(1000)]
 
 # Player settings
 player_size = 40
-pos_x = 50
-pos_y = 0
+pos_x = 0
+pos_y = -20
 mov_x = 0
 mov_y = 0
 drag = 0.80
@@ -37,6 +36,10 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 
 speed = 60
+
+new_render_positive = 0
+new_render_negative = 0
+rendering_point = 0
 
 
 def get_noise(x):
@@ -64,7 +67,7 @@ blocks_pos = [[0 for _ in range(64)] for _ in range(84)]
 print(blocks_pos)
 
 for z in range(84):
-    x = (z - 10) / 10
+    x = (z - 42) / 10
     noise_value = round(get_noise(x) * AMPLITUDE)
     print(noise_value)
     blocks_pos[z][40 + noise_value] = 1
@@ -93,34 +96,71 @@ while not done:
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_d]:
-        mov_x += 0.2
+        mov_x += 0.1
     if keys[pygame.K_a]:
-        mov_x -= 0.2
+        mov_x -= 0.1
     if keys[pygame.K_s]:
-        mov_y += 0.2
+        mov_y += 0.1
     if keys[pygame.K_w]:
-        mov_y -= 0.2
+        mov_y -= 0.1
+
+    print(pos_x, pos_y)
+
 
 
     # DRAWING THE BLOCKS
     for z in range(84):
         for y in range(64):
-            if blocks_pos[z][y] == 0:
+            if blocks_pos[z + new_render_positive][y] == 0:
                 continue
 
-            if blocks_pos[z][y] == 1:
-                screen.blit(gras_img, ((z - pos_x)*block_size, screen_height- block_size - y*block_size - (pos_y * block_size)))
+            if blocks_pos[z + new_render_positive][y] == 1:
+                screen.blit(gras_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size)))
 
-            if blocks_pos[z][y] == 2:
-                screen.blit(erde_img, ((z - pos_x)*block_size, screen_height- block_size - y*block_size - (pos_y * block_size)))
+            if blocks_pos[z + new_render_positive][y] == 2:
+                screen.blit(erde_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size)))
 
-            if blocks_pos[z][y] == 3:
-                screen.blit(stein_img, ((z - pos_x) *block_size, screen_height- block_size - y*block_size - (pos_y * block_size)))
-
-
+            if blocks_pos[z + new_render_positive][y] == 3:
+                screen.blit(stein_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size)))
 
 
     pygame.draw.rect(screen, black, (screen_width//2 - 1/2 * block_size, screen_height//2 - 1/2 * block_size, block_size,block_size))
+
+    if pos_x >= new_render_positive:
+        new_render_positive += 1
+        rendering_point += 1
+        print("NRP and pos_x", new_render_positive, pos_x)
+        x = (42 + new_render_positive) / 10
+        noise_value = round(get_noise(x) * AMPLITUDE)
+        print(noise_value)
+        blocks_pos.append([0 for _ in range(64)])
+        print("new blocks pos", blocks_pos)
+        print("83 + new_render_positive - new_render_negative", 83 + new_render_positive - new_render_negative)
+        blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value] = 1
+        blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value - 1] = 2
+        blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value - 2] = 2
+        for i in range(40 + noise_value - 2):
+                blocks_pos[83 + new_render_positive - new_render_negative][i] = 3
+
+    if pos_x <= new_render_negative:
+        new_render_negative -= 1
+        print(new_render_negative)
+        x = (-42 + new_render_negative) / 10
+        noise_value = round(get_noise(x) * AMPLITUDE)
+        print(noise_value)
+        blocks_pos.insert(0,[0 for _ in range(64)])
+        print("new blocks pos", blocks_pos)
+        blocks_pos[0][40 + noise_value] = 1
+        blocks_pos[0][40 + noise_value - 1] = 2
+        blocks_pos[0][40 + noise_value - 2] = 2
+        for i in range(40 + noise_value - 2):
+                blocks_pos[0][i] = 3
+
+    if pos_x <= rendering_point:
+        rendering_point -= 1
+
+    print("rendering_point", rendering_point, pos_x)
+
     pygame.display.flip()
     clock.tick(speed)
 pygame.quit()
