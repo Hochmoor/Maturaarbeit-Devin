@@ -111,31 +111,29 @@ while not done:
     # DRAWING THE BLOCKS
     for z in range(84):
         for y in range(64):
-            if blocks_pos[z + new_render_positive][y] == 0:
+            if blocks_pos[z + rendering_point][y] == 0:
                 continue
 
-            if blocks_pos[z + new_render_positive][y] == 1:
+            if blocks_pos[z + rendering_point][y] == 1:
                 screen.blit(gras_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size)))
 
-            if blocks_pos[z + new_render_positive][y] == 2:
+            if blocks_pos[z + rendering_point][y] == 2:
                 screen.blit(erde_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size)))
 
-            if blocks_pos[z + new_render_positive][y] == 3:
+            if blocks_pos[z + rendering_point][y] == 3:
                 screen.blit(stein_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size)))
 
 
     pygame.draw.rect(screen, black, (screen_width//2 - 1/2 * block_size, screen_height//2 - 1/2 * block_size, block_size,block_size))
 
-    if pos_x >= new_render_positive:
+    if pos_x > new_render_positive:
         new_render_positive += 1
-        rendering_point += 1
         print("NRP and pos_x", new_render_positive, pos_x)
         x = (42 + new_render_positive) / 10
         noise_value = round(get_noise(x) * AMPLITUDE)
         print(noise_value)
         blocks_pos.append([0 for _ in range(64)])
         print("new blocks pos", blocks_pos)
-        print("83 + new_render_positive - new_render_negative", 83 + new_render_positive - new_render_negative)
         blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value] = 1
         blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value - 1] = 2
         blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value - 2] = 2
@@ -149,18 +147,16 @@ while not done:
         noise_value = round(get_noise(x) * AMPLITUDE)
         print(noise_value)
         blocks_pos.insert(0,[0 for _ in range(64)])
-        print("new blocks pos", blocks_pos)
+
         blocks_pos[0][40 + noise_value] = 1
         blocks_pos[0][40 + noise_value - 1] = 2
         blocks_pos[0][40 + noise_value - 2] = 2
         for i in range(40 + noise_value - 2):
                 blocks_pos[0][i] = 3
+        print("new blocks pos", blocks_pos)
 
-    if pos_x <= rendering_point:
-        rendering_point -= 1
-
-    print("rendering_point", rendering_point, pos_x)
-
+    rendering_point = math.ceil(pos_x)
+    print("RENDERING POINT",rendering_point)
     pygame.display.flip()
     clock.tick(speed)
 pygame.quit()
