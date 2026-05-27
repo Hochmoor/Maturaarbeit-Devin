@@ -37,9 +37,10 @@ black = (0, 0, 0)
 
 speed = 60
 
-new_render_positive = 0
-new_render_negative = 0
-rendering_point = 0
+new_render_positive = 0 # This point keeps track of where the Player has been and if there needs to be a new render when player goes into unrendered territory.
+new_render_negative = 0 # This point keeps track of where the Player has been and if there needs to be a new render when player goes into unrendered territory.
+rendering_point = 0 # This is a rounded Version of the X coordinate to decide together with renderin_offset which part of the blocks_pos list to use.
+rendering_offset = 0 # This variable keeps track of the offset which builds up as the player explores into negative pos_x territory and new renders are added in the beginning of the list.
 
 
 def get_noise(x):
@@ -111,16 +112,15 @@ while not done:
     # DRAWING THE BLOCKS
     for z in range(84):
         for y in range(64):
-            if blocks_pos[z + rendering_point][y] == 0:
+            if blocks_pos[z + rendering_point + rendering_offset][y] == 0:
                 continue
-
-            if blocks_pos[z + rendering_point][y] == 1:
+            if blocks_pos[z + rendering_point + rendering_offset][y] == 1:
                 screen.blit(gras_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size)))
 
-            if blocks_pos[z + rendering_point][y] == 2:
+            if blocks_pos[z + rendering_point + rendering_offset][y] == 2:
                 screen.blit(erde_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size)))
 
-            if blocks_pos[z + rendering_point][y] == 3:
+            if blocks_pos[z + rendering_point + rendering_offset][y] == 3:
                 screen.blit(stein_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size)))
 
 
@@ -141,6 +141,7 @@ while not done:
                 blocks_pos[83 + new_render_positive - new_render_negative][i] = 3
 
     if pos_x <= new_render_negative:
+        rendering_offset += 1
         new_render_negative -= 1
         print(new_render_negative)
         x = (-42 + new_render_negative) / 10
