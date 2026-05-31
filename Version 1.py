@@ -9,13 +9,18 @@ block_size = screen_height // 36
 
 # --- Configuration ---
 FPS = 60
-SCALE = 0.005  # How "stretched" the hills are (Frequency)
-AMPLITUDE = 15  # How tall the hills are
-SPEED = 2  # Scrolling speed
 
-# --- Simple 1D Noise Logic ---
-# function to simulate the Perlin effect.
-seed_values = [random.uniform(-1, 1) for _ in range(1000)]
+scale_octave1 = 100
+amplitude_octave1 = 15
+scale_octave2 = 10
+amplitude_octave2 = 5
+scale_octave3 = 3
+amplitude_octave3 = 5
+
+# seed values
+seed_values_octave_1 = [random.uniform(-1, 1) for _ in range(100)]
+seed_values_octave_2 = [random.uniform(-1, 1) for _ in range(99)]
+seed_values_octave_3 = [random.uniform(-1, 1) for _ in range(98)]
 
 # Player settings
 player_size = 40
@@ -43,19 +48,47 @@ rendering_point = 0 # This is a rounded Version of the X coordinate to decide to
 rendering_offset = 0 # This variable keeps track of the offset which builds up as the player explores into negative pos_x territory and new renders are added in the beginning of the list.
 
 
-def get_noise(x):
-    # Determine the two points on our "ruler" we are between
-    p1 = math.floor(x) % 1000
-    p2 = (p1 + 1) % 1000
+def get_noise_octave1(pos_for_noise):
+    # Determine the two points on our "ruler"
+    p1 = math.floor(pos_for_noise) % len(seed_values_octave_1)
+    p2 = (p1 + 1) % len(seed_values_octave_1)
 
     # How far are we between those points (0.0 to 1.0)
-    frac = x - math.floor(x)
+    frac = pos_for_noise - math.floor(pos_for_noise)
 
     # Smoothstep interpolation (the "Fade" function)
     t = frac * frac * (3 - 2 * frac)
 
     # Blend the two random values
-    return seed_values[p1] * (1 - t) + seed_values[p2] * t
+    return seed_values_octave_1[p1] * (1 - t) + seed_values_octave_1[p2] * t
+
+def get_noise_octave2(pos_for_noise):
+    # Determine the two points on our "ruler"
+    p1 = math.floor(pos_for_noise) % len(seed_values_octave_2)
+    p2 = (p1 + 1) % len(seed_values_octave_2)
+
+    # How far are we between those points (0.0 to 1.0)
+    frac = pos_for_noise - math.floor(pos_for_noise)
+
+    # Smoothstep interpolation (the "Fade" function)
+    t = frac * frac * (3 - 2 * frac)
+
+    # Blend the two random values
+    return seed_values_octave_2[p1] * (1 - t) + seed_values_octave_2[p2] * t
+
+def get_noise_octave3(pos_for_noise):
+    # Determine the two points on our "ruler"
+    p1 = math.floor(pos_for_noise) % len(seed_values_octave_3)
+    p2 = (p1 + 1) % len(seed_values_octave_3)
+
+    # How far are we between those points (0.0 to 1.0)
+    frac = pos_for_noise - math.floor(pos_for_noise)
+
+    # Smoothstep interpolation (the "Fade" function)
+    t = frac * frac * (3 - 2 * frac)
+
+    # Blend the two random values
+    return seed_values_octave_3[p1] * (1 - t) + seed_values_octave_3[p2] * t
 
 
 # --- Pygame Setup ---
@@ -65,19 +98,26 @@ clock = pygame.time.Clock()
 offset = 0
 
 blocks_pos = [[0 for _ in range(64)] for _ in range(84)]
-print(blocks_pos)
+
 
 for z in range(84):
-    x = (z - 42) / 10
-    noise_value = round(get_noise(x) * AMPLITUDE)
-    print(noise_value)
+    x_octave1 = (z - 42) / scale_octave1
+    x_octave2 = (z - 43) / scale_octave2
+    x_octave3 = (z - 44) / scale_octave3
+    noise_value = round(get_noise_octave1(x_octave1) * amplitude_octave1) + round(get_noise_octave2(x_octave2) * amplitude_octave2)
+    if noise_value > 10:
+        noise_value += round(get_noise_octave3(x_octave3) * amplitude_octave3)
+    elif noise_value > 5:
+        noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
+
+    print("noise value",noise_value)
     blocks_pos[z][40 + noise_value] = 1
     blocks_pos[z][40 + noise_value - 1 ] = 2
     blocks_pos[z][40 + noise_value - 2 ] = 2
     for i in range(40 + noise_value - 2):
         blocks_pos[z][i] = 3
 
-print(blocks_pos)
+
 
 done = False
 while not done:
@@ -129,11 +169,16 @@ while not done:
     if pos_x > new_render_positive:
         new_render_positive += 1
         print("NRP and pos_x", new_render_positive, pos_x)
-        x = (42 + new_render_positive) / 10
-        noise_value = round(get_noise(x) * AMPLITUDE)
-        print(noise_value)
+        x_octave1 = (42 + new_render_positive) / scale_octave1
+        x_octave2 = (42 + new_render_positive) / scale_octave2
+        x_octave3 = (42 + new_render_positive) / scale_octave3
+        noise_value = round(get_noise_octave1(x_octave1) * amplitude_octave1) + round(get_noise_octave2(x_octave2) * amplitude_octave2)
+        if noise_value > 10:
+            noise_value += round(get_noise_octave3(x_octave3) * amplitude_octave3)
+        elif noise_value > 5:
+            noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
+        print("noise value",noise_value)
         blocks_pos.append([0 for _ in range(64)])
-        print("new blocks pos", blocks_pos)
         blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value] = 1
         blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value - 1] = 2
         blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value - 2] = 2
@@ -143,10 +188,16 @@ while not done:
     if pos_x <= new_render_negative:
         rendering_offset += 1
         new_render_negative -= 1
-        print(new_render_negative)
-        x = (-42 + new_render_negative) / 10
-        noise_value = round(get_noise(x) * AMPLITUDE)
-        print(noise_value)
+        print("New render negative",new_render_negative)
+        x_octave1 = (42 + new_render_positive) / scale_octave1
+        x_octave2 = (42 + new_render_positive) / scale_octave2
+        x_octave3 = (42 + new_render_positive) / scale_octave3
+        noise_value = round(get_noise_octave1(x_octave1) * amplitude_octave1) + round(get_noise_octave2(x_octave2) * amplitude_octave2)
+        if noise_value > 10:
+            noise_value += round(get_noise_octave3(x_octave3) * amplitude_octave3)
+        elif noise_value > 5:
+            noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
+        print("noise value", noise_value)
         blocks_pos.insert(0,[0 for _ in range(64)])
 
         blocks_pos[0][40 + noise_value] = 1
@@ -154,7 +205,7 @@ while not done:
         blocks_pos[0][40 + noise_value - 2] = 2
         for i in range(40 + noise_value - 2):
                 blocks_pos[0][i] = 3
-        print("new blocks pos", blocks_pos)
+
 
     rendering_point = math.ceil(pos_x)
     print("RENDERING POINT",rendering_point)
