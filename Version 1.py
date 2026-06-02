@@ -15,7 +15,7 @@ amplitude_octave1 = 15
 scale_octave2 = 10
 amplitude_octave2 = 5
 scale_octave3 = 3
-amplitude_octave3 = 5
+amplitude_octave3 = 3
 
 # seed values
 seed_values_octave_1 = [random.uniform(-1, 1) for _ in range(100)]
@@ -102,8 +102,8 @@ blocks_pos = [[0 for _ in range(64)] for _ in range(84)]
 
 for z in range(84):
     x_octave1 = (z - 42) / scale_octave1
-    x_octave2 = (z - 43) / scale_octave2
-    x_octave3 = (z - 44) / scale_octave3
+    x_octave2 = (z - 42) / scale_octave2
+    x_octave3 = (z - 42) / scale_octave3
     noise_value = round(get_noise_octave1(x_octave1) * amplitude_octave1) + round(get_noise_octave2(x_octave2) * amplitude_octave2)
     if noise_value > 10:
         noise_value += round(get_noise_octave3(x_octave3) * amplitude_octave3)
@@ -189,9 +189,9 @@ while not done:
         rendering_offset += 1
         new_render_negative -= 1
         print("New render negative",new_render_negative)
-        x_octave1 = (42 + new_render_positive) / scale_octave1
-        x_octave2 = (42 + new_render_positive) / scale_octave2
-        x_octave3 = (42 + new_render_positive) / scale_octave3
+        x_octave1 = (-42 + new_render_negative) / scale_octave1
+        x_octave2 = (-42 + new_render_negative) / scale_octave2
+        x_octave3 = (-42 + new_render_negative) / scale_octave3
         noise_value = round(get_noise_octave1(x_octave1) * amplitude_octave1) + round(get_noise_octave2(x_octave2) * amplitude_octave2)
         if noise_value > 10:
             noise_value += round(get_noise_octave3(x_octave3) * amplitude_octave3)
