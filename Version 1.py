@@ -47,6 +47,16 @@ new_render_negative = 0 # This point keeps track of where the Player has been an
 rendering_point = 0 # This is a rounded Version of the X coordinate to decide together with renderin_offset which part of the blocks_pos list to use.
 rendering_offset = 0 # This variable keeps track of the offset which builds up as the player explores into negative pos_x territory and new renders are added in the beginning of the list.
 
+#Cave Generation
+max_diggers = 3
+min_diggers = 1
+active_diggers_positive = random.randint(min_diggers, max_diggers)
+diggers_positive_pos = [[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)]]
+for i in range(active_diggers_positive):
+    diggers_positive_pos[i][0] = random.randint(4,60)
+    print("diggers_positive_pos",diggers_positive_pos)
+
+
 
 def get_noise_octave1(pos_for_noise):
     # Determine the two points on our "ruler"
@@ -117,6 +127,44 @@ for z in range(84):
     for i in range(40 + noise_value - 2):
         blocks_pos[z][i] = 3
 
+for z in range(84):
+    for y in range (len(diggers_positive_pos)):
+        if diggers_positive_pos[y][0] <= 64:
+            blocks_pos[z][diggers_positive_pos[y][0]]= 0
+            blocks_pos[z][diggers_positive_pos[y][0] - 1] = 0
+            blocks_pos[z][diggers_positive_pos[y][0] + 1] = 0
+
+            #Check if target was met
+            if diggers_positive_pos[y][0] == diggers_positive_pos[y][2]:
+                diggers_positive_pos[y][2] = random.randint(5, 49)
+
+            if diggers_positive_pos[y][0] <= 5:
+                diggers_positive_pos[y][0] += random.randint(0, 2)
+
+            elif 5 < diggers_positive_pos[y][0] < 59:
+                if diggers_positive_pos[y][0] <= diggers_positive_pos[y][2]:
+                    diggers_positive_pos[y][0] += random.randint(-1, 2)
+                elif diggers_positive_pos[y][0] >= diggers_positive_pos[y][2]:
+                    diggers_positive_pos[y][0] += random.randint(-2, 1)
+
+            elif diggers_positive_pos[y][0] >= 59:
+                diggers_positive_pos[y][0] += random.randint(-2, 0)
+
+        if active_diggers_positive + 1 < max_diggers and random.random() < 0.05:
+            diggers_positive_pos[active_diggers_positive - 1][0] = random.randint(4, 60)
+            active_diggers_positive += 1
+
+        elif active_diggers_positive <= max_diggers and random.random() < 0.15:
+            diggers_positive_pos[active_diggers_positive - 1][0] = 1000
+            active_diggers_positive -= 1
+            print("bombo")
+
+
+
+
+
+
+
 
 
 done = False
@@ -184,6 +232,42 @@ while not done:
         blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value - 2] = 2
         for i in range(40 + noise_value - 2):
                 blocks_pos[83 + new_render_positive - new_render_negative][i] = 3
+
+        for y in range(len(diggers_positive_pos)):
+            if diggers_positive_pos[y][0] <= 64:
+                blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0]] = 0
+                blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] - 1] = 0
+                blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] + 1] = 0
+
+                # Check if target was met
+                if diggers_positive_pos[y][0] == diggers_positive_pos[y][2]:
+                    diggers_positive_pos[y][2] = random.randint(5, 49)
+
+                if diggers_positive_pos[y][0] <= 5:
+                    diggers_positive_pos[y][0] += random.randint(0, 2)
+
+                elif 5 < diggers_positive_pos[y][0] < 59:
+                    if diggers_positive_pos[y][0] <= diggers_positive_pos[y][2]:
+                        diggers_positive_pos[y][0] += random.randint(-1, 2)
+                    elif diggers_positive_pos[y][0] >= diggers_positive_pos[y][2]:
+                        diggers_positive_pos[y][0] += random.randint(-2, 1)
+
+                elif diggers_positive_pos[y][0] >= 59:
+                    diggers_positive_pos[y][0] += random.randint(-2, 0)
+
+            if active_diggers_positive + 1 < max_diggers and random.random() < 0.05:
+                diggers_positive_pos[active_diggers_positive - 1][0] = random.randint(4, 60)
+                active_diggers_positive += 1
+
+
+            if active_diggers_positive <= max_diggers and random.random() < 0.15:
+                diggers_positive_pos[active_diggers_positive - 1][0] = 1000
+                active_diggers_positive -= 1
+                print("bombo")
+
+
+            print("active_diggers_positive",active_diggers_positive)
+
 
     if pos_x <= new_render_negative:
         rendering_offset += 1
