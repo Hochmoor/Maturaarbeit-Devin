@@ -50,9 +50,9 @@ rendering_offset = 0 # This variable keeps track of the offset which builds up a
 #Cave Generation
 max_diggers = 3
 min_diggers = 1
-active_diggers_positive = random.randint(min_diggers, max_diggers)
+starting_diggers = random.randint(min_diggers, max_diggers)
 diggers_positive_pos = [[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)]]
-for i in range(active_diggers_positive):
+for i in range(starting_diggers):
     diggers_positive_pos[i][0] = random.randint(4,60)
     print("diggers_positive_pos",diggers_positive_pos)
 
@@ -150,19 +150,6 @@ for z in range(84):
             elif diggers_positive_pos[y][0] >= 59:
                 diggers_positive_pos[y][0] += random.randint(-2, 0)
 
-        if active_diggers_positive + 1 < max_diggers and random.random() < 0.05:
-            diggers_positive_pos[active_diggers_positive - 1][0] = random.randint(4, 60)
-            active_diggers_positive += 1
-
-        elif active_diggers_positive <= max_diggers and random.random() < 0.15:
-            diggers_positive_pos[active_diggers_positive - 1][0] = 1000
-            active_diggers_positive -= 1
-            print("bombo")
-
-
-
-
-
 
 
 
@@ -254,19 +241,6 @@ while not done:
 
                 elif diggers_positive_pos[y][0] >= 59:
                     diggers_positive_pos[y][0] += random.randint(-2, 0)
-
-            if active_diggers_positive + 1 < max_diggers and random.random() < 0.05:
-                diggers_positive_pos[active_diggers_positive - 1][0] = random.randint(4, 60)
-                active_diggers_positive += 1
-
-
-            if active_diggers_positive <= max_diggers and random.random() < 0.15:
-                diggers_positive_pos[active_diggers_positive - 1][0] = 1000
-                active_diggers_positive -= 1
-                print("bombo")
-
-
-            print("active_diggers_positive",active_diggers_positive)
 
 
     if pos_x <= new_render_negative:
