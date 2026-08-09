@@ -50,11 +50,13 @@ rendering_offset = 0 # This variable keeps track of the offset which builds up a
 #Cave Generation
 max_diggers = 3
 min_diggers = 1
-starting_diggers = random.randint(min_diggers, max_diggers)
-diggers_positive_pos = [[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)]]
-for i in range(starting_diggers):
-    diggers_positive_pos[i][0] = random.randint(4,60)
-    print("diggers_positive_pos",diggers_positive_pos)
+starting_diggers = random.randint(min_diggers, max_diggers) # For the biases we don't want the same => Separate
+diggers_positive_pos =  [[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)]]
+diggers_negative_pos =  [[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)]]
+
+for i in range(starting_diggers): # For the starting pos we want to have the same => Together
+    diggers_positive_pos[i][0] = diggers_negative_pos[i][0] = random.randint(4,60)
+
 
 
 
@@ -263,6 +265,28 @@ while not done:
         blocks_pos[0][40 + noise_value - 2] = 2
         for i in range(40 + noise_value - 2):
                 blocks_pos[0][i] = 3
+
+        for y in range(len(diggers_negative_pos)):
+            if diggers_negative_pos[y][0] <= 64:
+                blocks_pos[0][diggers_negative_pos[y][0]] = 0
+                blocks_pos[0][diggers_negative_pos[y][0] - 1] = 0
+                blocks_pos[0][diggers_negative_pos[y][0] + 1] = 0
+
+                # Check if target was met
+                if diggers_negative_pos[y][0] == diggers_negative_pos[y][2]:
+                    diggers_negative_pos[y][2] = random.randint(5, 49)
+
+                if diggers_negative_pos[y][0] <= 5:
+                    diggers_negative_pos[y][0] += random.randint(0, 2)
+
+                elif 5 < diggers_negative_pos[y][0] < 59:
+                    if diggers_negative_pos[y][0] <= diggers_negative_pos[y][2]:
+                        diggers_negative_pos[y][0] += random.randint(-1, 2)
+                    elif diggers_negative_pos[y][0] >= diggers_negative_pos[y][2]:
+                        diggers_negative_pos[y][0] += random.randint(-2, 1)
+
+                elif diggers_negative_pos[y][0] >= 59:
+                    diggers_negative_pos[y][0] += random.randint(-2, 0)
 
 
     rendering_point = math.ceil(pos_x)
