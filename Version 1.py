@@ -201,6 +201,7 @@ while not done:
                 screen.blit(stein_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size)))
 
 
+    # DRAWING THE PLAYER
     pygame.draw.rect(screen, black, (screen_width//2 - 1/2 * block_size, screen_height//2 - 1/2 * block_size, block_size,block_size))
 
     if pos_x > new_render_positive:
