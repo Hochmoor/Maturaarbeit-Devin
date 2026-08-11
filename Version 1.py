@@ -102,6 +102,10 @@ def get_noise_octave3(pos_for_noise):
     # Blend the two random values
     return seed_values_octave_3[p1] * (1 - t) + seed_values_octave_3[p2] * t
 
+def get_blocks_convert_rect(rect): # Gets only the blocks around the player to save computing power. Then they get converted into pygame rectangles to later use "coliderect"
+    rectangles = []
+
+
 
 # --- Pygame Setup ---
 pygame.init()
@@ -153,7 +157,7 @@ for z in range(84):
                 diggers_positive_pos[y][0] += random.randint(-2, 0)
 
 
-
+print("blocks_pos",blocks_pos)
 
 
 done = False
@@ -249,7 +253,7 @@ while not done:
     if pos_x <= new_render_negative:
         rendering_offset += 1
         new_render_negative -= 1
-        print("New render negative",new_render_negative)
+        print("NRN and pos_x",new_render_negative,pos_x)
         x_octave1 = (-42 + new_render_negative) / scale_octave1
         x_octave2 = (-42 + new_render_negative) / scale_octave2
         x_octave3 = (-42 + new_render_negative) / scale_octave3
@@ -291,7 +295,12 @@ while not done:
 
 
     rendering_point = math.ceil(pos_x)
-    print("RENDERING POINT",rendering_point)
+    player_pos_in_blocks_pos = blocks_pos [41 + rendering_offset + rendering_point][-math.ceil(pos_y - 18)]
+    print("blocks_pos_position",41 + rendering_offset + rendering_point,-math.ceil(pos_y - 18))
+    blocks_pos[41 + rendering_offset + rendering_point][-math.ceil(pos_y - 18)] = 0 # This is the block 50% or more of the player is in.
+    for a in range (3): # This creates a 3x3 box around the player where collision will be checked in the future at the moment it just makes everything air.
+        for b in range (3):
+            blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 17) + b] = 0
     pygame.display.flip()
     clock.tick(speed)
 pygame.quit()
