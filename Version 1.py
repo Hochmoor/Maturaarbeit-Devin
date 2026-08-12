@@ -22,13 +22,19 @@ seed_values_octave_1 = [random.uniform(-1, 1) for _ in range(100)]
 seed_values_octave_2 = [random.uniform(-1, 1) for _ in range(99)]
 seed_values_octave_3 = [random.uniform(-1, 1) for _ in range(98)]
 
+
+
 # Player settings
 player_size = 40
+player_rect = pygame.Rect(screen_width//2 - 0.5 * player_size, screen_height//2 - 0.5 * player_size, player_size, player_size)
 pos_x = 0
 pos_y = -20
 mov_x = 0
 mov_y = 0
 drag = 0.80
+
+# Physics
+blocks_pos_blocks_in_range = []
 
 stein_img = pygame.image.load("stein.jpg").convert_alpha()
 stein_img = pygame.transform.smoothscale(stein_img, (block_size, block_size))
@@ -102,9 +108,6 @@ def get_noise_octave3(pos_for_noise):
     # Blend the two random values
     return seed_values_octave_3[p1] * (1 - t) + seed_values_octave_3[p2] * t
 
-def get_blocks_convert_rect(rect): # Gets only the blocks around the player to save computing power. Then they get converted into pygame rectangles to later use "coliderect"
-    rectangles = []
-
 
 
 # --- Pygame Setup ---
@@ -163,6 +166,7 @@ print("blocks_pos",blocks_pos)
 done = False
 while not done:
     screen.fill(white)
+    blocks_pos_blocks_in_range = []
 
     pos_x += mov_x
     pos_y += mov_y
@@ -190,6 +194,19 @@ while not done:
 
 
 
+    player_pos_in_blocks_pos = blocks_pos [41 + rendering_offset + rendering_point][-math.ceil(pos_y - 18)]
+    for a in range (3): # This creates a 3x3 box around the player where collision will be checked in the future at the moment it just makes everything air.
+        for b in range (3):
+            if blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 17) + b] != 0:
+                blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 17) + b] *= -1 # Make the number negative to be detected when drawing blocks_pos
+
+
+
+
+
+
+
+
     # DRAWING THE BLOCKS
     for z in range(84):
         for y in range(64):
@@ -204,21 +221,30 @@ while not done:
             if blocks_pos[z + rendering_point + rendering_offset][y] == 3:
                 screen.blit(stein_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y*block_size - (pos_y * block_size)))
 
-            if blocks_pos[z + rendering_point + rendering_offset][y] == 4:
+            if blocks_pos[z + rendering_point + rendering_offset][y] < 0:
                 screen.blit(stein_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size)))
                 # 1. Create the Rect object: (x, y, width, height)
-                rect = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), 40, 40)
+                rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), 40, 40)
+
+
 
                 # 2. Draw
                 # pygame.draw.rect(surface, color, rect)
-                pygame.draw.rect(screen, (255, 0, 0), rect)
+                pygame.draw.rect(screen, (255, 0, 0), rect_1)
+                blocks_pos_blocks_in_range.append(rect_1)
+                blocks_pos[z + rendering_point + rendering_offset][y] *= -1 # putting it back to the original state so the Block gets displayed with the right texture one the player moves away from it
 
 
+    #Collision Checking
+    for i in range(len(blocks_pos_blocks_in_range)):
+        block = blocks_pos_blocks_in_range[i]
 
-
+        if player_rect.colliderect(block):
+            # Collision detected! Handle it here
+            print("COLLISION")
 
     # DRAWING THE PLAYER
-    pygame.draw.rect(screen, black, (screen_width//2 - 1/2 * block_size, screen_height//2 - 1/2 * block_size, block_size,block_size))
+    pygame.draw.rect(screen, black, player_rect)
 
     if pos_x > new_render_positive:
         new_render_positive += 1
@@ -305,14 +331,7 @@ while not done:
                 elif diggers_negative_pos[y][0] >= 59:
                     diggers_negative_pos[y][0] += random.randint(-2, 0)
 
-
     rendering_point = math.ceil(pos_x)
-    player_pos_in_blocks_pos = blocks_pos [41 + rendering_offset + rendering_point][-math.ceil(pos_y - 18)]
-    print("blocks_pos_position",41 + rendering_offset + rendering_point,-math.ceil(pos_y - 18))
-    blocks_pos[41 + rendering_offset + rendering_point][-math.ceil(pos_y - 18)] = 4 # This is the block 50% or more of the player is in.
-    for a in range (3): # This creates a 3x3 box around the player where collision will be checked in the future at the moment it just makes everything air.
-        for b in range (3):
-            blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 17) + b] = 4
     pygame.display.flip()
     clock.tick(speed)
 pygame.quit()
