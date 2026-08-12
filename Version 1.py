@@ -117,7 +117,10 @@ def get_blocks_convert_rect(rect): # Gets only the blocks around the player to s
     rectangles = []
     for a in range (3): # This creates a 3x3 box around the player where collision will be checked in the future at the moment it just makes everything air.
         for b in range (3):
-            rectangles.append(pygame.Rect(a * block_size, b * block_size, block_size, block_size))
+            if blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 17) + b] == 0:
+                continue
+            else:
+                rectangles.append(pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size), block_size, block_size))
     return rectangles
 
 def check_collision(player_rect, mov_x, mov_y):
@@ -126,6 +129,7 @@ def check_collision(player_rect, mov_x, mov_y):
     # Horizontal movement
     player_rect.x += int(round(mov_x))
     for rectangle in get_blocks_convert_rect(player_rect):
+        print("rectangle: ", rectangle)
         if player_rect.colliderect(rectangle):
             if mov_x > 0:
                 player_rect.right = rectangle.left
@@ -148,12 +152,10 @@ def check_collision(player_rect, mov_x, mov_y):
 
 
 
-
 # --- Pygame Setup ---
 pygame.init()
 screen = pygame.display.set_mode((screen_width, screen_height))
 clock = pygame.time.Clock()
-offset = 0
 
 blocks_pos = [[0 for _ in range(64)] for _ in range(84)]
 
