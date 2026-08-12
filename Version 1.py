@@ -24,22 +24,11 @@ seed_values_octave_3 = [random.uniform(-1, 1) for _ in range(98)]
 
 # Player settings
 player_size = 40
-player_rect = pygame.Rect(0, 0, player_size, player_size)
-player_rect.centerx = screen_width // 2
 pos_x = 0
 pos_y = -20
 mov_x = 0
 mov_y = 0
-
-
-# Physics
-gravity = 0.6
-jump_speed = 12.5
-move_acceleration = 0.7
-max_run_speed = 6.0
-max_fall_speed = 16.0
-air_drag = 0.92
-ground_friction = 0.78
+drag = 0.80
 
 stein_img = pygame.image.load("stein.jpg").convert_alpha()
 stein_img = pygame.transform.smoothscale(stein_img, (block_size, block_size))
@@ -115,40 +104,6 @@ def get_noise_octave3(pos_for_noise):
 
 def get_blocks_convert_rect(rect): # Gets only the blocks around the player to save computing power. Then they get converted into pygame rectangles to later use "coliderect"
     rectangles = []
-    for a in range (3): # This creates a 3x3 box around the player where collision will be checked in the future at the moment it just makes everything air.
-        for b in range (3):
-            if blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 17) + b] == 0:
-                continue
-            else:
-                rectangles.append(pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size), block_size, block_size))
-    return rectangles
-
-def check_collision(player_rect, mov_x, mov_y):
-    on_ground = False
-
-    # Horizontal movement
-    player_rect.x += int(round(mov_x))
-    for rectangle in get_blocks_convert_rect(player_rect):
-        print("rectangle: ", rectangle)
-        if player_rect.colliderect(rectangle):
-            if mov_x > 0:
-                player_rect.right = rectangle.left
-            elif mov_x < 0:
-                player_rect.left = rectangle.right
-            mov_x = 0
-
-    # Vertical movement
-    player_rect.y += int(round(mov_y))
-    for rectangle in get_blocks_convert_rect(player_rect):
-        if player_rect.colliderect(rectangle):
-            if mov_y > 0:
-                player_rect.bottom = rectangle.top
-                on_ground = True
-            elif mov_y < 0:
-                player_rect.top = rectangle.bottom
-            mov_y = 0
-
-    return player_rect, mov_x, mov_y, on_ground
 
 
 
@@ -156,6 +111,7 @@ def check_collision(player_rect, mov_x, mov_y):
 pygame.init()
 screen = pygame.display.set_mode((screen_width, screen_height))
 clock = pygame.time.Clock()
+offset = 0
 
 blocks_pos = [[0 for _ in range(64)] for _ in range(84)]
 
@@ -203,53 +159,34 @@ for z in range(84):
 
 print("blocks_pos",blocks_pos)
 
-on_ground = False
+
 done = False
 while not done:
-
-
     screen.fill(white)
+
+    pos_x += mov_x
+    pos_y += mov_y
+
+    mov_x *= drag
+    mov_y *= drag
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            done = True
-        if event.type == pygame.KEYDOWN:
-            if event.key in (pygame.K_SPACE, pygame.K_w):
-                if on_ground:
-                    mov_y = -jump_speed
-                    on_ground = False
+            done = True  # ESC to quit fullscreen
 
     keys = pygame.key.get_pressed()
-
-    # Horizontal movement input
-    if keys[pygame.K_a]:
-        mov_x -= move_acceleration
     if keys[pygame.K_d]:
-        mov_x += move_acceleration
+        mov_x += 0.1
+    if keys[pygame.K_a]:
+        mov_x -= 0.1
+    if keys[pygame.K_s]:
+        mov_y += 0.1
+    if keys[pygame.K_w]:
+        mov_y -= 0.1
 
-
-    # Gravity
-    mov_y += gravity
-    if mov_y > max_fall_speed:
-        mov_y = max_fall_speed
-
-    # enforcing max speed
-    if mov_x > max_run_speed:
-        mov_x = max_run_speed
-    elif mov_x < -max_run_speed:
-        mov_x = -max_run_speed
-
-    # Friction / air drag
-    if on_ground and not (keys[pygame.K_a] or keys[pygame.K_d]):
-        mov_x *= ground_friction
-    else:
-        mov_x *= air_drag
-
-    # Move and collide
-    player_rect, mov_x, mov_y, on_ground = check_collision(player_rect, mov_x, mov_y)
-
+    print(pos_x, pos_y)
 
 
 
@@ -265,7 +202,19 @@ while not done:
                 screen.blit(erde_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size)))
 
             if blocks_pos[z + rendering_point + rendering_offset][y] == 3:
-                screen.blit(stein_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size)))
+                screen.blit(stein_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y*block_size - (pos_y * block_size)))
+
+            if blocks_pos[z + rendering_point + rendering_offset][y] == 4:
+                screen.blit(stein_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size)))
+                # 1. Create the Rect object: (x, y, width, height)
+                rect = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), 40, 40)
+
+                # 2. Draw
+                # pygame.draw.rect(surface, color, rect)
+                pygame.draw.rect(screen, (255, 0, 0), rect)
+
+
+
 
 
     # DRAWING THE PLAYER
@@ -358,6 +307,12 @@ while not done:
 
 
     rendering_point = math.ceil(pos_x)
+    player_pos_in_blocks_pos = blocks_pos [41 + rendering_offset + rendering_point][-math.ceil(pos_y - 18)]
+    print("blocks_pos_position",41 + rendering_offset + rendering_point,-math.ceil(pos_y - 18))
+    blocks_pos[41 + rendering_offset + rendering_point][-math.ceil(pos_y - 18)] = 4 # This is the block 50% or more of the player is in.
+    for a in range (3): # This creates a 3x3 box around the player where collision will be checked in the future at the moment it just makes everything air.
+        for b in range (3):
+            blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 17) + b] = 4
     pygame.display.flip()
     clock.tick(speed)
 pygame.quit()
