@@ -194,7 +194,6 @@ while not done:
 
 
 
-    player_pos_in_blocks_pos = blocks_pos [41 + rendering_offset + rendering_point][-math.ceil(pos_y - 18)]
     for a in range (3): # This creates a 3x3 box around the player where collision will be checked in the future at the moment it just makes everything air.
         for b in range (3):
             if blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 17) + b] != 0:
@@ -240,8 +239,30 @@ while not done:
         block = blocks_pos_blocks_in_range[i]
 
         if player_rect.colliderect(block):
-            # Collision detected! Handle it here
-            print("COLLISION")
+            if mov_x > 0:
+                player_rect.right = blocks_pos_blocks_in_range[i].left
+            elif mov_x < 0:
+                player_rect.left = blocks_pos_blocks_in_range[i].right
+                mov_x = 0
+
+    for i in range(len(blocks_pos_blocks_in_range)):
+        block = blocks_pos_blocks_in_range[i]
+
+        if player_rect.colliderect(block):
+            if mov_y > 0:
+                player_rect.bottom = blocks_pos_blocks_in_range[i].top
+            elif mov_y < 0:
+                player_rect.top = blocks_pos_blocks_in_range[i].bottom
+                mov_y = 0
+
+    #resetting player_rect
+    player_rect_temporary = player_rect
+    player_rect = pygame.Rect(screen_width // 2 - 0.5 * player_size, screen_height // 2 - 0.5 * player_size,player_size, player_size)
+    difference_x = player_rect_temporary[0] - player_rect[0]
+    difference_y = player_rect_temporary[1] - player_rect[1]
+    print("difference_x", difference_x)
+    pos_x += difference_x/block_size
+    pos_y += difference_y/block_size
 
     # DRAWING THE PLAYER
     pygame.draw.rect(screen, black, player_rect)

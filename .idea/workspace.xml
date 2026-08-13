@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="The right blocks are now converted into the right rectangles.&#10;No collision detection yet.&#10;12.09.2026">
+    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="Collision detection working!&#10;Physics not yet implemented.&#10;12.09.2026">
       <change afterPath="$PROJECT_DIR$/Collision Test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Version 1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Version 1.py" afterDir="false" />
@@ -106,7 +106,15 @@
       <option name="project" value="LOCAL" />
       <updated>1786536585494</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Collision detection working!&#10;Physics not yet implemented.&#10;12.09.2026">
+      <option name="closed" value="true" />
+      <created>1786545806158</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1786545806158</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -114,6 +122,7 @@
     <MESSAGE value="About to implement collision&#10;11.09.2026" />
     <MESSAGE value="Collision still doesn't quite work&#10;12.09.2026" />
     <MESSAGE value="The right blocks are now converted into the right rectangles.&#10;No collision detection yet.&#10;12.09.2026" />
-    <option name="LAST_COMMIT_MESSAGE" value="The right blocks are now converted into the right rectangles.&#10;No collision detection yet.&#10;12.09.2026" />
+    <MESSAGE value="Collision detection working!&#10;Physics not yet implemented.&#10;12.09.2026" />
+    <option name="LAST_COMMIT_MESSAGE" value="Collision detection working!&#10;Physics not yet implemented.&#10;12.09.2026" />
   </component>
 </project>
