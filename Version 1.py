@@ -28,6 +28,8 @@ player_size = block_size
 player_rect = pygame.Rect(screen_width//2 - 0.5 * player_size, screen_height//2 - 0.5 * player_size, player_size, player_size)
 pos_x = 0
 pos_y = -20
+last_frame_pos_x = pos_x
+last_frame_pos_y = pos_y
 mov_x = 0
 mov_y = 0
 drag = 0.80
@@ -235,30 +237,13 @@ while not done:
         block = blocks_pos_blocks_in_range[i]
 
         if player_rect.colliderect(block):
-            if mov_x > 0:
-                player_rect.right = blocks_pos_blocks_in_range[i].left
-            elif mov_x < 0:
-                player_rect.left = blocks_pos_blocks_in_range[i].right
-                mov_x = 0
+            pos_x = last_frame_pos_x
+            pos_y = last_frame_pos_y
+            mov_x = 0
+            mov_y = 0
 
-    for i in range(len(blocks_pos_blocks_in_range)):
-        block = blocks_pos_blocks_in_range[i]
 
-        if player_rect.colliderect(block):
-            if mov_y > 0:
-                player_rect.bottom = blocks_pos_blocks_in_range[i].top
-            elif mov_y < 0:
-                player_rect.top = blocks_pos_blocks_in_range[i].bottom
-                mov_y = 0
 
-    #resetting player_rect
-    player_rect_temporary = player_rect
-    player_rect = pygame.Rect(screen_width // 2 - 0.5 * player_size, screen_height // 2 - 0.5 * player_size,player_size, player_size)
-    difference_x = player_rect_temporary[0] - player_rect[0]
-    difference_y = player_rect_temporary[1] - player_rect[1]
-    print("difference_x", difference_x)
-    pos_x += difference_x/block_size
-    pos_y += difference_y/block_size
 
     # DRAWING THE PLAYER
     pygame.draw.rect(screen, black, player_rect)
@@ -349,6 +334,8 @@ while not done:
                     diggers_negative_pos[y][0] += random.randint(-2, 0)
 
     rendering_point = math.ceil(pos_x)
+    last_frame_pos_x = pos_x
+    last_frame_pos_y = pos_y
     pygame.display.flip()
     clock.tick(speed)
 pygame.quit()
