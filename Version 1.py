@@ -23,9 +23,8 @@ seed_values_octave_2 = [random.uniform(-1, 1) for _ in range(99)]
 seed_values_octave_3 = [random.uniform(-1, 1) for _ in range(98)]
 
 
-
 # Player settings
-player_size = 40
+player_size = block_size
 player_rect = pygame.Rect(screen_width//2 - 0.5 * player_size, screen_height//2 - 0.5 * player_size, player_size, player_size)
 pos_x = 0
 pos_y = -20
@@ -198,9 +197,6 @@ while not done:
         for b in range (3):
             if blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 17) + b] != 0:
                 blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 17) + b] *= -1 # Make the number negative to be detected when drawing blocks_pos
-
-
-
 
 
 

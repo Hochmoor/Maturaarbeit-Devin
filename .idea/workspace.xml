@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="Collision detection working!&#10;Physics not yet implemented.&#10;12.09.2026">
-      <change afterPath="$PROJECT_DIR$/Collision Test.py" afterDir="false" />
+    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="Collision detection working and stops player (physics implemented), but still unusable.&#10;13.09.2026">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Version 1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Version 1.py" afterDir="false" />
     </list>
@@ -116,6 +115,29 @@
     </task>
     <option name="localTasksCounter" value="6" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Working cave generation in both directions.&#10;09.09.2026" />
