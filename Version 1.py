@@ -26,8 +26,12 @@ seed_values_octave_3 = [random.uniform(-1, 1) for _ in range(98)]
 # Player settings
 player_size = block_size
 player_rect = pygame.Rect(screen_width//2 - 0.5 * player_size, screen_height//2 - 0.5 * player_size, player_size, player_size)
+player_rect_right_original = player_rect.right
+player_rect_top_original = player_rect.top
+print("player_rect_right_original",player_rect_right_original)
+print("player_rect_top_original",player_rect_top_original)
 pos_x = 0
-pos_y = -20
+pos_y = -40
 last_frame_pos_x = pos_x
 last_frame_pos_y = pos_y
 mov_x = 0
@@ -63,7 +67,6 @@ diggers_negative_pos =  [[1000,0,random.randint(5,59)],[1000,0,random.randint(5,
 
 for i in range(starting_diggers): # For the starting pos we want to have the same => Together
     diggers_positive_pos[i][0] = diggers_negative_pos[i][0] = random.randint(4,60)
-
 
 
 
@@ -200,9 +203,43 @@ while not done:
             if blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 17) + b] != 0:
                 blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 17) + b] *= -1 # Make the number negative to be detected when drawing blocks_pos
 
+    # DRAWING THE BLOCKS
+    for z in range(84):
+        for y in range(64):
+            if blocks_pos[z + rendering_point + rendering_offset][y] < 0:
+                screen.blit(stein_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size)))
+                # 1. Create the Rect object: (x, y, width, height)
+                rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), 40, 40)
+                blocks_pos_blocks_in_range.append(rect_1)
+                blocks_pos[z + rendering_point + rendering_offset][y] *= -1 # putting it back to the original state so the Block gets displayed with the right texture one the player moves away from it
 
+    #Collision Checking
+    for i in range(len(blocks_pos_blocks_in_range)):
+        block = blocks_pos_blocks_in_range[i]
+        if player_rect.colliderect(block):
 
+            if mov_x > 0:
+                player_rect.right = block.left
+            elif mov_x < 0:
+                player_rect.left = block.right
+            mov_x = 0
 
+    for i in range(len(blocks_pos_blocks_in_range)):
+        block = blocks_pos_blocks_in_range[i]
+
+        if player_rect.colliderect(block):
+            if mov_y > 0:
+                player_rect.bottom = block.top
+                on_ground = True
+            elif mov_y < 0:
+                player_rect.top = block.bottom
+            mov_y = 0
+
+    player_rect_right_difference = player_rect.right - player_rect_right_original
+    player_rect_top_difference = player_rect.top - player_rect_top_original
+    pos_x = pos_x + player_rect_right_difference / block_size
+    pos_y = pos_y + player_rect_top_difference / block_size
+    player_rect = pygame.Rect(screen_width // 2 - 0.5 * player_size, screen_height // 2 - 0.5 * player_size,player_size, player_size)
 
     # DRAWING THE BLOCKS
     for z in range(84):
@@ -217,31 +254,6 @@ while not done:
 
             if blocks_pos[z + rendering_point + rendering_offset][y] == 3:
                 screen.blit(stein_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y*block_size - (pos_y * block_size)))
-
-            if blocks_pos[z + rendering_point + rendering_offset][y] < 0:
-                screen.blit(stein_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size)))
-                # 1. Create the Rect object: (x, y, width, height)
-                rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), 40, 40)
-
-
-
-                # 2. Draw
-                # pygame.draw.rect(surface, color, rect)
-                pygame.draw.rect(screen, (255, 0, 0), rect_1)
-                blocks_pos_blocks_in_range.append(rect_1)
-                blocks_pos[z + rendering_point + rendering_offset][y] *= -1 # putting it back to the original state so the Block gets displayed with the right texture one the player moves away from it
-
-
-    #Collision Checking
-    for i in range(len(blocks_pos_blocks_in_range)):
-        block = blocks_pos_blocks_in_range[i]
-
-        if player_rect.colliderect(block):
-            pos_x = last_frame_pos_x
-            pos_y = last_frame_pos_y
-            mov_x = 0
-            mov_y = 0
-
 
 
 
