@@ -36,9 +36,16 @@ last_frame_pos_x = pos_x
 last_frame_pos_y = pos_y
 mov_x = 0
 mov_y = 0
-drag = 0.80
 
 # Physics
+gravity = 0.05
+jump_speed = 1
+move_acceleration = 0.7
+max_run_speed = 6.0
+max_fall_speed = 16.0
+air_drag = 0.92
+ground_friction = 0.80
+
 blocks_pos_blocks_in_range = []
 
 stein_img = pygame.image.load("stein.jpg").convert_alpha()
@@ -166,7 +173,7 @@ for z in range(84):
 
 print("blocks_pos",blocks_pos)
 
-
+on_ground = False
 done = False
 while not done:
     screen.fill(white)
@@ -175,8 +182,6 @@ while not done:
     pos_x += mov_x
     pos_y += mov_y
 
-    mov_x *= drag
-    mov_y *= drag
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -189,12 +194,23 @@ while not done:
         mov_x += 0.1
     if keys[pygame.K_a]:
         mov_x -= 0.1
-    if keys[pygame.K_s]:
-        mov_y += 0.1
     if keys[pygame.K_w]:
-        mov_y -= 0.1
-
+        if on_ground:
+            mov_y = mov_y - jump_speed
     print(pos_x, pos_y)
+    # Gravity
+    mov_y += gravity
+    if mov_y > max_fall_speed:
+        mov_y = max_fall_speed
+
+    # Clamp horizontal speed
+    if mov_x > max_run_speed:
+        mov_x = max_run_speed
+    elif mov_x < -max_run_speed:
+        mov_x = -max_run_speed
+
+    # Friction / air drag
+    mov_x = mov_x * ground_friction
 
 
 
@@ -209,11 +225,12 @@ while not done:
             if blocks_pos[z + rendering_point + rendering_offset][y] < 0:
                 screen.blit(stein_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size)))
                 # 1. Create the Rect object: (x, y, width, height)
-                rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), 40, 40)
+                rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), block_size, block_size)
                 blocks_pos_blocks_in_range.append(rect_1)
                 blocks_pos[z + rendering_point + rendering_offset][y] *= -1 # putting it back to the original state so the Block gets displayed with the right texture one the player moves away from it
 
     #Collision Checking
+    on_ground = False
     for i in range(len(blocks_pos_blocks_in_range)):
         block = blocks_pos_blocks_in_range[i]
         if player_rect.colliderect(block):
