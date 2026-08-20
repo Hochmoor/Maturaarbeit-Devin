@@ -38,8 +38,8 @@ mov_x = 0
 mov_y = 0
 
 # Physics
-gravity = 0.05
-jump_speed = 1
+gravity = 0.025
+jump_speed = 0.5
 move_acceleration = 0.7
 max_run_speed = 6.0
 max_fall_speed = 16.0
@@ -173,15 +173,27 @@ for z in range(84):
 
 print("blocks_pos",blocks_pos)
 
+def build_blocks_in_range(cur_pos_x, cur_pos_y): #cur is for current because pos_y is not updated yet when the function runs for the first time.
+# This function allows the pos_x and pos_y to be updated individually to make collision checking work.
+    blocks_in_range = []
+    for a in range(3):  # This creates a 3x3 box around the player where collision will be checked
+        for b in range(3):
+            if blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(cur_pos_y - 17) + b] != 0:
+                blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(cur_pos_y - 17) + b] *= -1  # Make the number negative to be detected when drawing blocks_pos
+
+    for z in range(84):
+        for y in range(64):
+            if blocks_pos[z + rendering_point + rendering_offset][y] < 0:
+                # 1. Create the Rect object: (x, y, width, height)
+                rect_1 = pygame.Rect((z - cur_pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (cur_pos_y * block_size), block_size, block_size)
+                blocks_in_range.append(rect_1)
+                blocks_pos[z + rendering_point + rendering_offset][y] *= -1  # putting it back to the original state so the Block gets displayed with the right texture once the player moves away from it
+    return blocks_in_range
+
 on_ground = False
 done = False
 while not done:
     screen.fill(white)
-    blocks_pos_blocks_in_range = []
-
-    pos_x += mov_x
-    pos_y += mov_y
-
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -212,38 +224,30 @@ while not done:
     # Friction / air drag
     mov_x = mov_x * ground_friction
 
+    # Horizontal step: move only X, then check for collisions
+    # pos_y is NOT touched yet, so the vertical gap to the ground from last
+    # frame is still intact and this pass can't be fooled by falling motion.
+    pos_x += mov_x
+    blocks_pos_blocks_in_range = build_blocks_in_range(pos_x, pos_y)
 
-
-    for a in range (3): # This creates a 3x3 box around the player where collision will be checked in the future at the moment it just makes everything air.
-        for b in range (3):
-            if blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 17) + b] != 0:
-                blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 17) + b] *= -1 # Make the number negative to be detected when drawing blocks_pos
-
-    # DRAWING THE BLOCKS
-    for z in range(84):
-        for y in range(64):
-            if blocks_pos[z + rendering_point + rendering_offset][y] < 0:
-                screen.blit(stein_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size)))
-                # 1. Create the Rect object: (x, y, width, height)
-                rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), block_size, block_size)
-                blocks_pos_blocks_in_range.append(rect_1)
-                blocks_pos[z + rendering_point + rendering_offset][y] *= -1 # putting it back to the original state so the Block gets displayed with the right texture one the player moves away from it
-
-    #Collision Checking
-    on_ground = False
-    for i in range(len(blocks_pos_blocks_in_range)):
-        block = blocks_pos_blocks_in_range[i]
+    for block in blocks_pos_blocks_in_range:
         if player_rect.colliderect(block):
-
             if mov_x > 0:
                 player_rect.right = block.left
             elif mov_x < 0:
                 player_rect.left = block.right
             mov_x = 0
 
-    for i in range(len(blocks_pos_blocks_in_range)):
-        block = blocks_pos_blocks_in_range[i]
+    player_rect_right_difference = player_rect.right - player_rect_right_original
+    pos_x = pos_x + player_rect_right_difference / block_size
+    player_rect = pygame.Rect(screen_width // 2 - 0.5 * player_size, screen_height // 2 - 0.5 * player_size, player_size, player_size)
 
+    # Vertical step: move only Y (using the already corrected pos_x), then check for collisions
+    pos_y += mov_y
+    blocks_pos_blocks_in_range = build_blocks_in_range(pos_x, pos_y)
+
+    on_ground = False
+    for block in blocks_pos_blocks_in_range:
         if player_rect.colliderect(block):
             if mov_y > 0:
                 player_rect.bottom = block.top
@@ -252,11 +256,9 @@ while not done:
                 player_rect.top = block.bottom
             mov_y = 0
 
-    player_rect_right_difference = player_rect.right - player_rect_right_original
     player_rect_top_difference = player_rect.top - player_rect_top_original
-    pos_x = pos_x + player_rect_right_difference / block_size
     pos_y = pos_y + player_rect_top_difference / block_size
-    player_rect = pygame.Rect(screen_width // 2 - 0.5 * player_size, screen_height // 2 - 0.5 * player_size,player_size, player_size)
+    player_rect = pygame.Rect(screen_width // 2 - 0.5 * player_size, screen_height // 2 - 0.5 * player_size, player_size, player_size)
 
     # DRAWING THE BLOCKS
     for z in range(84):

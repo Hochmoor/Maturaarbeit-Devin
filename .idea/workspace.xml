@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="Kollsision an die Bildschrimgrösse angepasst. Hüpfen funktiniert aber Movement ist noch buggy.&#10;20.08.2026">
+    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="Instead of using complicated pos_x movement when a block is hit it goes back to the position of the last frame when collision is detected.&#10;This causes gaps between player and blocks though.&#10;17.08.2026">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Version 1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Version 1.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,7 +19,6 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="RESET_MODE" value="SOFT" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -40,9 +37,6 @@
   &quot;associatedIndex&quot;: 0
 }</component>
   <component name="ProjectId" id="3GfdJ3eIJl2Zte4yzwVMplnLo7L" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -56,15 +50,16 @@
     "Python.Version 1.executor": "Run",
     "Python.Version 2.executor": "Run",
     "Python.Version1_with_gravity_collision.executor": "Run",
-    "Python.Version_1_ Gravity.executor": "Run",
     "Python.Version_1_with_gravity (1).executor": "Run",
+    "Python.collision fix.executor": "Run",
     "Python.pygame_collision_fixed.executor": "Run",
     "Python.pygame_collision_player_fixed.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "two.files.diff.last.used.file": "C:/Users/druet/PycharmProjects/Maturaarbeit/collision fix.py"
   }
 }]]></component>
   <component name="SharedIndexes">
@@ -138,13 +133,13 @@
       <option name="project" value="LOCAL" />
       <updated>1786992547776</updated>
     </task>
-    <task id="LOCAL-00008" summary="An die Bildschrimgrösse angepasst. Ein Hupfen funktiniert aber Movement ist noch buggy.&#10;20.08.2026">
+    <task id="LOCAL-00008" summary="Instead of using complicated pos_x movement when a block is hit it goes back to the position of the last frame when collision is detected.&#10;This causes gaps between player and blocks though.&#10;17.08.2026">
       <option name="closed" value="true" />
-      <created>1787223493455</created>
+      <created>1786994106815</created>
       <option name="number" value="00008" />
       <option name="presentableId" value="LOCAL-00008" />
       <option name="project" value="LOCAL" />
-      <updated>1787223493455</updated>
+      <updated>1786994106815</updated>
     </task>
     <option name="localTasksCounter" value="9" />
     <servers />
@@ -180,18 +175,7 @@
     <MESSAGE value="Collision detection working!&#10;Physics not yet implemented.&#10;12.09.2026" />
     <MESSAGE value="Last Commit and Push didn't work. Now trying again.&#10;&#10;Collision detection working and stops player (physics implemented), but still unusable.&#10;13.09.2026" />
     <MESSAGE value="The Original Version 1 HUP.py&#10;17.08.2026" />
-    <MESSAGE value="An die Bildschrimgrösse angepasst. Ein Hupfen funktiniert aber Movement ist noch buggy.&#10;20.08.2026" />
-    <option name="LAST_COMMIT_MESSAGE" value="An die Bildschrimgrösse angepasst. Ein Hupfen funktiniert aber Movement ist noch buggy.&#10;20.08.2026" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Version_1_with_gravity (1).py</url>
-          <line>1</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Instead of using complicated pos_x movement when a block is hit it goes back to the position of the last frame when collision is detected.&#10;This causes gaps between player and blocks though.&#10;17.08.2026" />
+    <option name="LAST_COMMIT_MESSAGE" value="Instead of using complicated pos_x movement when a block is hit it goes back to the position of the last frame when collision is detected.&#10;This causes gaps between player and blocks though.&#10;17.08.2026" />
   </component>
 </project>
