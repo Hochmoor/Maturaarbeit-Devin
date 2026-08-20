@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="The Original Version 1 HUP.py&#10;17.08.2026">
-      <change afterPath="$PROJECT_DIR$/Version_1_ Gravity.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="Kollsision an die Bildschrimgrösse angepasst. Hüpfen funktiniert aber Movement ist noch buggy.&#10;20.08.2026">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Version 1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Version 1.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +21,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="SOFT" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -140,7 +138,15 @@
       <option name="project" value="LOCAL" />
       <updated>1786992547776</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="An die Bildschrimgrösse angepasst. Ein Hupfen funktiniert aber Movement ist noch buggy.&#10;20.08.2026">
+      <option name="closed" value="true" />
+      <created>1787223493455</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1787223493455</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -174,7 +180,8 @@
     <MESSAGE value="Collision detection working!&#10;Physics not yet implemented.&#10;12.09.2026" />
     <MESSAGE value="Last Commit and Push didn't work. Now trying again.&#10;&#10;Collision detection working and stops player (physics implemented), but still unusable.&#10;13.09.2026" />
     <MESSAGE value="The Original Version 1 HUP.py&#10;17.08.2026" />
-    <option name="LAST_COMMIT_MESSAGE" value="The Original Version 1 HUP.py&#10;17.08.2026" />
+    <MESSAGE value="An die Bildschrimgrösse angepasst. Ein Hupfen funktiniert aber Movement ist noch buggy.&#10;20.08.2026" />
+    <option name="LAST_COMMIT_MESSAGE" value="An die Bildschrimgrösse angepasst. Ein Hupfen funktiniert aber Movement ist noch buggy.&#10;20.08.2026" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
