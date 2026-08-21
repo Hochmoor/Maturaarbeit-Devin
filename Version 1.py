@@ -260,6 +260,37 @@ while not done:
     pos_y = pos_y + player_rect_top_difference / block_size
     player_rect = pygame.Rect(screen_width // 2 - 0.5 * player_size, screen_height // 2 - 0.5 * player_size, player_size, player_size)
 
+    # Mining Blocks
+
+    # Get the current mouse position
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+
+    # Check if the left mouse button is currently pressed
+    left_mouse_pressed = pygame.mouse.get_pressed()[0]
+
+    #Creating Rect
+    mouse_following_rect = pygame.Rect(mouse_x, mouse_y, 1, 1)
+    if left_mouse_pressed:
+        for a in range(7):  # This creates a 3x3 box around the player where collision will be checked
+            for b in range(7):
+                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] != 0:
+                    blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] *= -1
+
+    blocks_in_range_mouse = []
+    for z in range(84):
+        for y in range(64):
+            if blocks_pos[z + rendering_point + rendering_offset][y] < 0:
+                # 1. Create the Rect object: (x, y, width, height)
+                rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), block_size, block_size)
+                blocks_in_range_mouse.append(rect_1)
+                blocks_pos[z + rendering_point + rendering_offset][y] *= -1  # putting it back to the original state so the Block gets displayed with the right texture once the player moves away from it
+                if rect_1.colliderect(mouse_following_rect):
+                    blocks_pos[z + rendering_point + rendering_offset][y] = 0
+
+
+
+
+
     # DRAWING THE BLOCKS
     for z in range(84):
         for y in range(64):
