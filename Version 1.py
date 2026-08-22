@@ -127,6 +127,17 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 clock = pygame.time.Clock()
 offset = 0
 
+# INVENTORY
+# The inventory keeps track of how many and what kind of blocks the player is carrying.
+# The dictionary keys match the numbers used in blocks_pos.
+inventory = {1: 0, 2: 0, 3: 0} # Inventory can be expanded easily
+block_names = {1: "Grass", 2: "Dirt", 3: "Stone"}
+block_images = {1: gras_img, 2: erde_img, 3: stein_img}
+selected_block = 3      # Block currently selected to place
+inventory_open = False  # Toggled by pressing "E"
+
+inventory_font = pygame.font.SysFont(None, max(18, block_size))
+
 blocks_pos = [[0 for _ in range(64)] for _ in range(84)]
 
 
@@ -190,6 +201,40 @@ def build_blocks_in_range(cur_pos_x, cur_pos_y): #cur is for current because pos
                 blocks_pos[z + rendering_point + rendering_offset][y] *= -1  # putting it back to the original state so the Block gets displayed with the right texture once the player moves away from it
     return blocks_in_range
 
+
+def draw_inventory():
+    # A small hotbar in the top-left, always visible, showing what will be placed and how much of it we have.
+    hotbar_x = 20
+    hotbar_y = 20
+    for i, block_type in enumerate([1, 2, 3]):
+        slot_rect = pygame.Rect(hotbar_x + i * (block_size + 10), hotbar_y, block_size, block_size)
+        pygame.draw.rect(screen, white, slot_rect)
+        screen.blit(block_images[block_type], slot_rect)
+        border_color = (255, 0, 0) if block_type == selected_block else black
+        border_width = 3 if block_type == selected_block else 1
+        pygame.draw.rect(screen, border_color, slot_rect, border_width)
+        count_surface = inventory_font.render(str(inventory[block_type]), True, black)
+        screen.blit(count_surface, (slot_rect.x + 2, slot_rect.bottom - count_surface.get_height()))
+
+    # The bigger panel only appears while the inventory is toggled open with "E".
+    if inventory_open:
+        panel_width = 260
+        panel_height = 50 + len(inventory) * (block_size + 10)
+        panel_rect = pygame.Rect(screen_width // 2 - panel_width // 2, screen_height // 2 - panel_height // 2, panel_width, panel_height)
+        pygame.draw.rect(screen, white, panel_rect)
+        pygame.draw.rect(screen, black, panel_rect, 2)
+
+        title_surface = inventory_font.render("Inventory", True, black)
+        screen.blit(title_surface, (panel_rect.x + 10, panel_rect.y + 10))
+
+        for i, block_type in enumerate([1, 2, 3]):
+            row_y = panel_rect.y + 50 + i * (block_size + 10)
+            icon_rect = pygame.Rect(panel_rect.x + 10, row_y, block_size, block_size)
+            screen.blit(block_images[block_type], icon_rect)
+            label_surface = inventory_font.render(f"{block_names[block_type]}: {inventory[block_type]}", True, black)
+            screen.blit(label_surface, (icon_rect.right + 10, row_y + block_size // 2 - label_surface.get_height() // 2))
+
+
 on_ground = False
 done = False
 while not done:
@@ -200,6 +245,14 @@ while not done:
             done = True
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             done = True  # ESC to quit fullscreen
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
+            inventory_open = not inventory_open  # Toggle the inventory panel open/closed
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+            selected_block = 1  # Select Grass for placing
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+            selected_block = 2  # Select Dirt for placing
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_3:
+            selected_block = 3  # Select Stone for placing
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_d]:
@@ -286,6 +339,8 @@ while not done:
                 blocks_in_range_mouse.append(rect_1)
                 blocks_pos[z + rendering_point + rendering_offset][y] *= -1  # putting it back to the original state so the Block gets displayed with the right texture once the player moves away from it
                 if rect_1.colliderect(mouse_following_rect):
+                    mined_block_type = blocks_pos[z + rendering_point + rendering_offset][y]  # Remember which block we're about to remove
+                    inventory[mined_block_type] = inventory.get(mined_block_type, 0) + 1       # Add one of that block to the inventory
                     blocks_pos[z + rendering_point + rendering_offset][y] = 0 # Removing the block by setting it to zero
 
     #Checking 7x7 blocks around player
@@ -305,7 +360,9 @@ while not done:
                 blocks_in_range_mouse.append(rect_1)
                 blocks_pos[z + rendering_point + rendering_offset][y] = 0  # putting it back to the original state 0 = Air
                 if rect_1.colliderect(mouse_following_rect) and not rect_1.colliderect(player_rect):
-                    blocks_pos[z + rendering_point + rendering_offset][y] = 3 # Placing stone (for now)
+                    if inventory.get(selected_block, 0) > 0:                  # Only place if we actually have one in the inventory
+                        blocks_pos[z + rendering_point + rendering_offset][y] = selected_block
+                        inventory[selected_block] -= 1                        # Placing costs one block from the inventory
 
 
     # DRAWING THE BLOCKS
@@ -326,6 +383,9 @@ while not done:
 
     # DRAWING THE PLAYER
     pygame.draw.rect(screen, black, player_rect)
+
+    # DRAWING THE INVENTORY (hotbar + optional panel)
+    draw_inventory()
 
     if pos_x > new_render_positive:
         new_render_positive += 1
