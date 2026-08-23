@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="Added a simple form of placing blocks.&#10;21.08.2026">
+    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="Simple Inventory.&#10;Note: The display function draw_inventory is AI generated und will be reworked unless fully understood.&#10;22.08.2026">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Version 1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Version 1.py" afterDir="false" />
     </list>
@@ -41,29 +41,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.Collision Test.executor": "Run",
-    "Python.Mouse demonstrator.executor": "Run",
-    "Python.Simple Collision Test.executor": "Run",
-    "Python.Version 1 HUP.executor": "Run",
-    "Python.Version 1 Inventory.executor": "Run",
-    "Python.Version 1.executor": "Run",
-    "Python.Version 2.executor": "Run",
-    "Python.Version1_with_gravity_collision.executor": "Run",
-    "Python.Version_1_with_gravity (1).executor": "Run",
-    "Python.collision fix.executor": "Run",
-    "Python.pygame_collision_fixed.executor": "Run",
-    "Python.pygame_collision_player_fixed.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "two.files.diff.last.used.file": "C:/Users/druet/PycharmProjects/Maturaarbeit/Version 1.py"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.Collision Test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Mouse demonstrator.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Simple Collision Test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Version 1 HUP.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Version 1 Inventory.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Version 1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Version 2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Version1_with_gravity_collision.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Version_1_with_gravity (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python.collision fix.executor&quot;: &quot;Run&quot;,
+    &quot;Python.pygame_collision_fixed.executor&quot;: &quot;Run&quot;,
+    &quot;Python.pygame_collision_player_fixed.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;two.files.diff.last.used.file&quot;: &quot;C:/Users/druet/PycharmProjects/Maturaarbeit/Version 1.py&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -167,7 +167,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787339918615</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Simple Inventory.&#10;Note: The display function draw_inventory is AI generated und will be reworked unless fully understood.&#10;22.08.2026">
+      <option name="closed" value="true" />
+      <created>1787431148456</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1787431148456</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -205,6 +213,7 @@
     <MESSAGE value="Ghost block flickering and Movement overhaul!&#10;Movement finally fixed with a Function that allows pos_x collisions to be checked first eliminating the &quot;random&quot; movement problem in the previous versions.&#10;20.08.2026" />
     <MESSAGE value="Added a simple form of mining.&#10;21.08.2026" />
     <MESSAGE value="Added a simple form of placing blocks.&#10;21.08.2026" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added a simple form of placing blocks.&#10;21.08.2026" />
+    <MESSAGE value="Simple Inventory.&#10;Note: The display function draw_inventory is AI generated und will be reworked unless fully understood.&#10;22.08.2026" />
+    <option name="LAST_COMMIT_MESSAGE" value="Simple Inventory.&#10;Note: The display function draw_inventory is AI generated und will be reworked unless fully understood.&#10;22.08.2026" />
   </component>
 </project>

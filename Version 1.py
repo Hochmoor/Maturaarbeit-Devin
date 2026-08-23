@@ -48,12 +48,12 @@ ground_friction = 0.80
 
 blocks_pos_blocks_in_range = []
 
-stein_img = pygame.image.load("stein.jpg").convert_alpha()
-stein_img = pygame.transform.smoothscale(stein_img, (block_size, block_size))
-gras_img = pygame.image.load("gras.jpg").convert_alpha()
-gras_img = pygame.transform.smoothscale(gras_img, (block_size, block_size))
-erde_img = pygame.image.load("erde.jpg").convert_alpha()
-erde_img = pygame.transform.smoothscale(erde_img, (block_size, block_size))
+stein_img = pygame.image.load("stone.png").convert_alpha()
+stein_img = pygame.transform.scale(stein_img, (block_size, block_size))
+gras_img = pygame.image.load("grass.png").convert_alpha()
+gras_img = pygame.transform.scale(gras_img, (block_size, block_size))
+erde_img = pygame.image.load("dirt.png").convert_alpha()
+erde_img = pygame.transform.scale(erde_img, (block_size, block_size))
 
 white = (255, 255, 255)
 black = (0, 0, 0)
@@ -189,7 +189,7 @@ def build_blocks_in_range(cur_pos_x, cur_pos_y): #cur is for current because pos
     blocks_in_range = []
     for a in range(3):  # This creates a 3x3 box around the player where collision will be checked
         for b in range(3):
-            if blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(cur_pos_y - 17) + b] != 0:
+            if blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(cur_pos_y - 17) + b] != 0 and blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(cur_pos_y - 17) + b] != 1:
                 blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(cur_pos_y - 17) + b] *= -1  # Make the number negative to be detected when drawing blocks_pos
 
     for z in range(84):
