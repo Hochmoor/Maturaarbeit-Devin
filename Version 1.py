@@ -497,5 +497,6 @@ while not done:
     last_frame_pos_x = pos_x
     last_frame_pos_y = pos_y
     pygame.display.flip()
+    print("FPS",clock.get_fps())
     clock.tick(speed)
 pygame.quit()
