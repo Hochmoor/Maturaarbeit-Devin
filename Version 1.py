@@ -59,6 +59,16 @@ deep_rock_img = pygame.transform.scale(deep_rock_img, (block_size, block_size))
 magma_img = pygame.image.load("magma3.png").convert_alpha()
 magma_img = pygame.transform.scale(magma_img, (block_size, block_size))
 
+#Structures
+tree = [[0,0,1,1,1,0],
+        [0,0,1,1,1,1],
+        [2,2,1,1,1,1],
+        [0,0,1,1,1,1],
+        [0,0,1,1,1,0]]
+
+print("len(tree)",len(tree))
+print("len(tree[0])",len(tree[0]))
+
 white = (255, 255, 255)
 black = (0, 0, 0)
 
@@ -187,6 +197,10 @@ for z in range(84):
 
             elif diggers_positive_pos[y][0] >= 59:
                 diggers_positive_pos[y][0] += random.randint(-2, 0)
+
+for a in range(len(tree)):
+    for b in range(len(tree[a])):
+        blocks_pos[a][b] = tree[a][b]
 
 
 print("blocks_pos",blocks_pos)
