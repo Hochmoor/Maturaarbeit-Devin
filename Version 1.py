@@ -67,6 +67,11 @@ tree = [[0,0,1,1,1,0],
         [0,0,1,1,1,1],
         [0,0,1,1,1,0]]
 
+tree_density_mode = random.randint(1,3)
+print("tree_density_mode",tree_density_mode)
+next_tree = random.randint(1,10)
+print("next_tree",next_tree)
+
 print("len(tree)",len(tree))
 print("len(tree[0])",len(tree[0]))
 
@@ -198,12 +203,25 @@ for z in range(84):
             elif diggers_positive_pos[y][0] >= 59:
                 diggers_positive_pos[y][0] += random.randint(-2, 0)
 
-for a in range(len(tree)):
-    for b in range(len(tree[a])):
-        blocks_pos[a][b] = tree[a][b]
+# Drawing Trees
+for z in range(84):
+    next_tree -= 1
+    if next_tree == 0:
+        for a in range(len(tree)):
+            for b in range(len(tree[a])):
+                blocks_pos[a + z - len(tree)][b + blocks_pos[z].index(1)] = tree[a][b]
+        if tree_density_mode == 1:
+            next_tree = random.randint(16, 40)
+        if tree_density_mode == 2:
+            next_tree = random.randint(8, 20)
+        if tree_density_mode == 3:
+            next_tree = random.randint(4, 8)
 
 
-print("blocks_pos",blocks_pos)
+
+
+
+
 
 def build_blocks_in_range(cur_pos_x, cur_pos_y): #cur is for current because pos_y is not updated yet when the function runs for the first time.
 # This function allows the pos_x and pos_y to be updated individually to make collision checking work.
