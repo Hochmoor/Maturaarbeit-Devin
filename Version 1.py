@@ -22,6 +22,7 @@ seed_values_octave_1 = [random.uniform(-1, 1) for _ in range(100)]
 seed_values_octave_2 = [random.uniform(-1, 1) for _ in range(99)]
 seed_values_octave_3 = [random.uniform(-1, 1) for _ in range(98)]
 
+world_height = 104
 
 # Player settings
 player_size = block_size
@@ -31,7 +32,7 @@ player_rect_top_original = player_rect.top
 print("player_rect_right_original",player_rect_right_original)
 print("player_rect_top_original",player_rect_top_original)
 pos_x = 0
-pos_y = -75
+pos_y = -40
 last_frame_pos_x = pos_x
 last_frame_pos_y = pos_y
 mov_x = 0
@@ -151,7 +152,7 @@ inventory_open = False  # Toggled by pressing "E"
 
 inventory_font = pygame.font.SysFont(None, max(18, block_size))
 
-blocks_pos = [[0 for _ in range(256)] for _ in range(84)]
+blocks_pos = [[0 for _ in range(world_height)] for _ in range(84)]
 
 
 for z in range(84):
@@ -165,19 +166,18 @@ for z in range(84):
         noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
 
     print("noise value",noise_value)
-    blocks_pos[z][180 + noise_value] = 1
-    blocks_pos[z][180 + noise_value - 1 ] = 2
-    blocks_pos[z][180 + noise_value - 2 ] = 2
-    for i in range(60 + noise_value - 2):
-        blocks_pos[z][i + 120] = 3
-    for i in range(60):
-        blocks_pos[z][i + 60] = 4
-    for i in range(60):
-        blocks_pos[z][i] = 5
+    blocks_pos[z][40 + noise_value] = 1
+    blocks_pos[z][40 + noise_value - 1 ] = 2
+    blocks_pos[z][40 + noise_value - 2 ] = 2
+    for i in range(24 + noise_value - 2):
+        blocks_pos[z][i + 16] = 3
+    for i in range(16):
+        blocks_pos[z][i] = 4
+
 
 for z in range(84):
     for y in range (len(diggers_positive_pos)):
-        if diggers_positive_pos[y][0] <= 256:
+        if diggers_positive_pos[y][0] <= 64:
             blocks_pos[z][diggers_positive_pos[y][0]]= 0
             blocks_pos[z][diggers_positive_pos[y][0] - 1] = 0
             blocks_pos[z][diggers_positive_pos[y][0] + 1] = 0
@@ -214,7 +214,7 @@ def build_blocks_in_range(cur_pos_x, cur_pos_y): #cur is for current because pos
                 blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(cur_pos_y - 17) + b] *= -1  # Make the number negative to be detected when drawing blocks_pos
 
     for z in range(84):
-        for y in range(256):
+        for y in range(world_height):
             if blocks_pos[z + rendering_point + rendering_offset][y] < 0:
                 # 1. Create the Rect object: (x, y, width, height)
                 rect_1 = pygame.Rect((z - cur_pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (cur_pos_y * block_size), block_size, block_size)
@@ -260,6 +260,8 @@ on_ground = False
 done = False
 while not done:
     screen.fill(white)
+    # DRAWING THE PLAYER
+    pygame.draw.rect(screen, black, player_rect)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -353,7 +355,7 @@ while not done:
 
     blocks_in_range_mouse = [] # Emptying the list
     for z in range(84):
-        for y in range(256):
+        for y in range(world_height):
             if blocks_pos[z + rendering_point + rendering_offset][y] < 0: # Finding the blocks made negative by the 7x7 Box
                 # Create the Rect object: (x, y, width, height)
                 rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), block_size, block_size)
@@ -374,7 +376,7 @@ while not done:
 
     blocks_in_range_mouse = [] # Emptying the list
     for z in range(84):
-        for y in range(256):
+        for y in range(world_height):
             if blocks_pos[z + rendering_point + rendering_offset][y] < 0: # Finding the blocks made negative by the 7x7 Box
                 # Create the Rect object: (x, y, width, height)
                 rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), block_size, block_size)
@@ -388,7 +390,7 @@ while not done:
 
     # DRAWING THE BLOCKS
     for z in range(84):
-        for y in range(256):
+        for y in range(world_height):
             if blocks_pos[z + rendering_point + rendering_offset][y] == 0:
                 continue
             if blocks_pos[z + rendering_point + rendering_offset][y] == 1:
@@ -408,9 +410,6 @@ while not done:
 
 
 
-    # DRAWING THE PLAYER
-    pygame.draw.rect(screen, black, player_rect)
-
     # DRAWING THE INVENTORY (hotbar + optional panel)
     draw_inventory()
 
@@ -426,19 +425,18 @@ while not done:
         elif noise_value > 5:
             noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
         print("noise value",noise_value)
-        blocks_pos.append([0 for _ in range(256)])
-        blocks_pos[83 + new_render_positive - new_render_negative][180 + noise_value] = 1
-        blocks_pos[83 + new_render_positive - new_render_negative][180 + noise_value - 1] = 2
-        blocks_pos[83 + new_render_positive - new_render_negative][180 + noise_value - 2] = 2
-        for i in range(60 + noise_value - 2):
-                blocks_pos[83 + new_render_positive - new_render_negative][i + 120] = 3
-        for i in range(60):
-            blocks_pos[83 + new_render_positive - new_render_negative][i + 60] = 4
-        for i in range(60):
-            blocks_pos[83 + new_render_positive - new_render_negative][i] = 5
+        blocks_pos.append([0 for _ in range(world_height)])
+        blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value] = 1
+        blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value - 1] = 2
+        blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value - 2] = 2
+        for i in range(24 + noise_value - 2):
+            blocks_pos[83 + new_render_positive - new_render_negative][i + 16] = 3
+        for i in range(16):
+            blocks_pos[83 + new_render_positive - new_render_negative][i] = 4
+
 
         for y in range(len(diggers_positive_pos)):
-            if diggers_positive_pos[y][0] <= 256:
+            if diggers_positive_pos[y][0] <= 64:
                 blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0]] = 0
                 blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] - 1] = 0
                 blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] + 1] = 0
@@ -473,20 +471,18 @@ while not done:
         elif noise_value > 5:
             noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
         print("noise value", noise_value)
-        blocks_pos.insert(0,[0 for _ in range(256)])
+        blocks_pos.insert(0,[0 for _ in range(world_height)])
 
-        blocks_pos[0][180 + noise_value] = 1
-        blocks_pos[0][180 + noise_value - 1] = 2
-        blocks_pos[0][180 + noise_value - 2] = 2
-        for i in range(60 + noise_value - 2):
-                blocks_pos[0][i + 120] = 3
-        for i in range(60):
-            blocks_pos[0][i + 60] = 4
-        for i in range(60):
-            blocks_pos[0][i] = 5
+        blocks_pos[0][40 + noise_value] = 1
+        blocks_pos[0][40 + noise_value - 1] = 2
+        blocks_pos[0][40 + noise_value - 2] = 2
+        for i in range(24 + noise_value - 2):
+            blocks_pos[0][i + 16] = 3
+        for i in range(16):
+            blocks_pos[0][i] = 4
 
         for y in range(len(diggers_negative_pos)):
-            if diggers_negative_pos[y][0] <= 256:
+            if diggers_negative_pos[y][0] <= 64:
                 blocks_pos[0][diggers_negative_pos[y][0]] = 0
                 blocks_pos[0][diggers_negative_pos[y][0] - 1] = 0
                 blocks_pos[0][diggers_negative_pos[y][0] + 1] = 0
