@@ -69,7 +69,7 @@ tree = [[0,0,1,1,1,0],
 
 tree_density_mode = random.randint(1,3)
 print("tree_density_mode",tree_density_mode)
-next_tree = random.randint(1,10)
+next_tree = 3
 print("next_tree",next_tree)
 
 print("len(tree)",len(tree))
@@ -204,12 +204,13 @@ for z in range(84):
                 diggers_positive_pos[y][0] += random.randint(-2, 0)
 
 # Drawing Trees
-for z in range(84):
+for z in range(84 - 5):
     next_tree -= 1
     if next_tree == 0:
         for a in range(len(tree)):
             for b in range(len(tree[a])):
-                blocks_pos[a + z - len(tree)][b + blocks_pos[z].index(1)] = tree[a][b]
+                ground_height = blocks_pos[z].index(1)
+                print("ground_height",ground_height)
         if tree_density_mode == 1:
             next_tree = random.randint(16, 40)
         if tree_density_mode == 2:
