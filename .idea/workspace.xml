@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="Tree generation concept is existent but not working.&#10;&#10;26.08.2026">
+    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="Trying to find the ground height at a given point to know where to place trees.&#10;&#10;27.08.2026">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Version 1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Version 1.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -215,7 +214,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787774005648</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Trying to find the ground height at a given point to know where to place trees.&#10;&#10;27.08.2026">
+      <option name="closed" value="true" />
+      <created>1787864230445</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1787864230446</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -259,6 +266,7 @@
     <MESSAGE value="First step of adding trees to the game. A tree is displayed now using dirt and grass because the proper blocks don't exist yet. Just serves as a demonstration.&#10;&#10;25.08.2026" />
     <MESSAGE value="Due to performance issues the world height was reduced again. Now there are just stone and deep rock layers. Magma will be used for structures.&#10;&#10;26.08.2026" />
     <MESSAGE value="Tree generation concept is existent but not working.&#10;&#10;26.08.2026" />
-    <option name="LAST_COMMIT_MESSAGE" value="Tree generation concept is existent but not working.&#10;&#10;26.08.2026" />
+    <MESSAGE value="Trying to find the ground height at a given point to know where to place trees.&#10;&#10;27.08.2026" />
+    <option name="LAST_COMMIT_MESSAGE" value="Trying to find the ground height at a given point to know where to place trees.&#10;&#10;27.08.2026" />
   </component>
 </project>
