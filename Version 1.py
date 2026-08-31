@@ -59,13 +59,17 @@ deep_rock_img = pygame.image.load("deep rock.png").convert_alpha()
 deep_rock_img = pygame.transform.scale(deep_rock_img, (block_size, block_size))
 magma_img = pygame.image.load("magma3.png").convert_alpha()
 magma_img = pygame.transform.scale(magma_img, (block_size, block_size))
+leaf_light_img = pygame.image.load("leafe_light.png").convert_alpha()
+leaf_light_img = pygame.transform.scale(leaf_light_img, (block_size, block_size))
+leaf_dark_img = pygame.image.load("leafe_dark.png").convert_alpha()
+leaf_dark_img = pygame.transform.scale(leaf_dark_img, (block_size, block_size))
 
 #Structures
-tree = [[0,0,1,1,1,0],
-        [0,0,1,1,1,1],
-        [2,2,1,1,1,1],
-        [0,0,1,1,1,1],
-        [0,0,1,1,1,0]]
+tree = [[0,0,6,6,7,0],
+        [0,0,7,7,6,6],
+        [2,2,7,6,6,7],
+        [0,0,6,7,7,6],
+        [0,0,7,6,7,0]]
 
 tree_density_mode = random.randint(1,3)
 print("tree_density_mode",tree_density_mode)
@@ -437,6 +441,14 @@ while not done:
 
             if blocks_pos[z + rendering_point + rendering_offset][y] == 5:
                 screen.blit(magma_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y*block_size - (pos_y * block_size)))
+
+            if blocks_pos[z + rendering_point + rendering_offset][y] == 6:
+                screen.blit(leaf_light_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y*block_size - (pos_y * block_size)))
+
+            if blocks_pos[z + rendering_point + rendering_offset][y] == 7:
+                screen.blit(leaf_dark_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y*block_size - (pos_y * block_size)))
+
+
 
 
 
