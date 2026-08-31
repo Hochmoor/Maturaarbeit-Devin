@@ -207,10 +207,21 @@ for z in range(84):
 for z in range(84 - 5):
     next_tree -= 1
     if next_tree == 0:
+        x_octave1 = (z - 42 + 2) / scale_octave1
+        x_octave2 = (z - 42 + 2) / scale_octave2
+        x_octave3 = (z - 42 + 2) / scale_octave3
+        noise_value = round(get_noise_octave1(x_octave1) * amplitude_octave1) + round(get_noise_octave2(x_octave2) * amplitude_octave2)
+        if noise_value > 10:
+            noise_value += round(get_noise_octave3(x_octave3) * amplitude_octave3)
+        elif noise_value > 5:
+            noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
+        ground_height = noise_value
+        print("noise value",noise_value)
         for a in range(len(tree)):
             for b in range(len(tree[a])):
-                ground_height = blocks_pos[z].index(1)
-                print("ground_height",ground_height)
+                if blocks_pos[a + z][b + ground_height + 40] == 0 or blocks_pos[a + z][b + ground_height + 40] == 1:
+                    blocks_pos[a + z][b + ground_height + 40] = tree[a][b]
+
         if tree_density_mode == 1:
             next_tree = random.randint(16, 40)
         if tree_density_mode == 2:
