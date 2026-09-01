@@ -63,11 +63,13 @@ leaf_light_img = pygame.image.load("leafe_light.png").convert_alpha()
 leaf_light_img = pygame.transform.scale(leaf_light_img, (block_size, block_size))
 leaf_dark_img = pygame.image.load("leafe_dark.png").convert_alpha()
 leaf_dark_img = pygame.transform.scale(leaf_dark_img, (block_size, block_size))
+wood_img = pygame.image.load("wood.png").convert_alpha()
+wood_img = pygame.transform.scale(wood_img, (block_size, block_size))
 
 #Structures
 tree = [[0,0,6,6,7,0],
         [0,0,7,7,6,6],
-        [2,2,7,6,6,7],
+        [8,8,7,6,6,7],
         [0,0,6,7,7,6],
         [0,0,7,6,7,0]]
 
@@ -448,9 +450,8 @@ while not done:
             if blocks_pos[z + rendering_point + rendering_offset][y] == 7:
                 screen.blit(leaf_dark_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y*block_size - (pos_y * block_size)))
 
-
-
-
+            if blocks_pos[z + rendering_point + rendering_offset][y] == 8:
+                screen.blit(wood_img, ((z - pos_x + rendering_point) * block_size - block_size * 10,screen_height - block_size - y * block_size - (pos_y * block_size)))
 
     # DRAWING THE INVENTORY (hotbar + optional panel)
     draw_inventory()
