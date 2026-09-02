@@ -74,8 +74,10 @@ tree = [[0,0,6,6,7,0],
         [0,0,7,6,7,0]]
 
 tree_density_mode = random.randint(1,3)
-print("tree_density_mode",tree_density_mode)
-next_tree = 3
+tree_density_mode_negative = random.randint(1,3)
+
+next_tree = random.randint(2,5)
+next_tree_negative = random.randint(2,5)
 print("next_tree",next_tree)
 
 print("len(tree)",len(tree))
@@ -180,10 +182,19 @@ for z in range(84):
     blocks_pos[z][40 + noise_value] = 1
     blocks_pos[z][40 + noise_value - 1 ] = 2
     blocks_pos[z][40 + noise_value - 2 ] = 2
-    for i in range(24 + noise_value - 2):
-        blocks_pos[z][i + 16] = 3
-    for i in range(16):
+    for i in range(22 + noise_value - 2):
+        blocks_pos[z][i + 18] = 3
+
+    blocks_pos[z][12] = random.choices([3, 4], [5, 95])[0]
+    blocks_pos[z][13] = random.choices([3, 4], [20, 80])[0]
+    blocks_pos[z][14] = random.choices([3, 4], [40, 60])[0]
+    blocks_pos[z][15] = random.choices([3, 4], [60, 40])[0]
+    blocks_pos[z][16] = random.choices([3, 4], [80, 20])[0]
+    blocks_pos[z][17] = random.choices([3, 4], [95, 5])[0]
+
+    for i in range(12):
         blocks_pos[z][i] = 4
+
 
 
 for z in range(84):
@@ -210,7 +221,8 @@ for z in range(84):
                 diggers_positive_pos[y][0] += random.randint(-2, 0)
 
 # Drawing Trees
-for z in range(84 - 5):
+for z in range(74): # 74 because blocks pos is 84 rows long and I want 5 blocks of clearance on each side
+    z += 5
     next_tree -= 1
     if next_tree == 0:
         x_octave1 = (z - 42 + 2) / scale_octave1
@@ -234,9 +246,6 @@ for z in range(84 - 5):
             next_tree = random.randint(8, 20)
         if tree_density_mode == 3:
             next_tree = random.randint(4, 8)
-
-
-
 
 
 
@@ -472,9 +481,17 @@ while not done:
         blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value] = 1
         blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value - 1] = 2
         blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value - 2] = 2
-        for i in range(24 + noise_value - 2):
-            blocks_pos[83 + new_render_positive - new_render_negative][i + 16] = 3
-        for i in range(16):
+        for i in range(22 + noise_value - 2):
+            blocks_pos[83 + new_render_positive - new_render_negative][i + 18] = 3
+
+        blocks_pos[83 + new_render_positive - new_render_negative][12] = random.choices([3, 4], [5, 95])[0]
+        blocks_pos[83 + new_render_positive - new_render_negative][13] = random.choices([3, 4], [20, 80])[0]
+        blocks_pos[83 + new_render_positive - new_render_negative][14] = random.choices([3, 4], [40, 60])[0]
+        blocks_pos[83 + new_render_positive - new_render_negative][15] = random.choices([3, 4], [60, 40])[0]
+        blocks_pos[83 + new_render_positive - new_render_negative][16] = random.choices([3, 4], [80, 20])[0]
+        blocks_pos[83 + new_render_positive - new_render_negative][17] = random.choices([3, 4], [95, 5])[0]
+
+        for i in range(12):
             blocks_pos[83 + new_render_positive - new_render_negative][i] = 4
 
 
@@ -500,6 +517,34 @@ while not done:
                 elif diggers_positive_pos[y][0] >= 59:
                     diggers_positive_pos[y][0] += random.randint(-2, 0)
 
+        next_tree -= 1
+        one_percent = random.randint(1, 100)
+        if one_percent == 100:
+            tree_density_mode = random.randint(1, 3)
+        if next_tree == 0:
+            x_octave1 = (42 - 3 + new_render_positive) / scale_octave1
+            x_octave2 = (42 - 3 + new_render_positive) / scale_octave2
+            x_octave3 = (42 - 3 + new_render_positive) / scale_octave3
+            noise_value = round(get_noise_octave1(x_octave1) * amplitude_octave1) + round(
+                get_noise_octave2(x_octave2) * amplitude_octave2)
+            if noise_value > 10:
+                noise_value += round(get_noise_octave3(x_octave3) * amplitude_octave3)
+            elif noise_value > 5:
+                noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
+            ground_height = noise_value
+            print("noise value", noise_value)
+            for a in range(len(tree)):
+                for b in range(len(tree[a])):
+                    if blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] == 0 or blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] == 1:
+                        blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] = tree[a][b]
+
+            if tree_density_mode == 1:
+                next_tree = random.randint(16, 40)
+            if tree_density_mode == 2:
+                next_tree = random.randint(8, 20)
+            if tree_density_mode == 3:
+                next_tree = random.randint(4, 8)
+
 
     if pos_x <= new_render_negative:
         rendering_offset += 1
@@ -519,9 +564,17 @@ while not done:
         blocks_pos[0][40 + noise_value] = 1
         blocks_pos[0][40 + noise_value - 1] = 2
         blocks_pos[0][40 + noise_value - 2] = 2
-        for i in range(24 + noise_value - 2):
-            blocks_pos[0][i + 16] = 3
-        for i in range(16):
+        for i in range(22 + noise_value - 2):
+            blocks_pos[0][i + 18] = 3
+
+        blocks_pos[0][12] = random.choices([3, 4], [5, 95])[0]
+        blocks_pos[0][13] = random.choices([3, 4], [20, 80])[0]
+        blocks_pos[0][14] = random.choices([3, 4], [40, 60])[0]
+        blocks_pos[0][15] = random.choices([3, 4], [60, 40])[0]
+        blocks_pos[0][16] = random.choices([3, 4], [80, 20])[0]
+        blocks_pos[0][17] = random.choices([3, 4], [95, 5])[0]
+
+        for i in range(12):
             blocks_pos[0][i] = 4
 
         for y in range(len(diggers_negative_pos)):
@@ -545,6 +598,34 @@ while not done:
 
                 elif diggers_negative_pos[y][0] >= 59:
                     diggers_negative_pos[y][0] += random.randint(-2, 0)
+
+        next_tree_negative -= 1
+        one_percent = random.randint(1, 100)
+        if one_percent == 100:
+            tree_density_mode_negative = random.randint(1, 3)
+        if next_tree_negative == 0:
+            x_octave1 = (-42 + 7 + new_render_negative) / scale_octave1
+            x_octave2 = (-42 + 7 + new_render_negative) / scale_octave2
+            x_octave3 = (-42 + 7 + new_render_negative) / scale_octave3
+            noise_value = round(get_noise_octave1(x_octave1) * amplitude_octave1) + round(
+                get_noise_octave2(x_octave2) * amplitude_octave2)
+            if noise_value > 10:
+                noise_value += round(get_noise_octave3(x_octave3) * amplitude_octave3)
+            elif noise_value > 5:
+                noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
+            ground_height = noise_value
+            print("noise value", noise_value)
+            for a in range(len(tree)):
+                for b in range(len(tree[a])):
+                    if blocks_pos[a + 5][b + ground_height + 40] == 0 or blocks_pos[a + 5][b + ground_height + 40] == 1:
+                        blocks_pos[a + 5][b + ground_height + 40] = tree[a][b]
+
+            if tree_density_mode_negative == 1:
+                next_tree_negative = random.randint(16, 40)
+            if tree_density_mode_negative == 2:
+                next_tree_negative = random.randint(8, 20)
+            if tree_density_mode_negative == 3:
+                next_tree_negative = random.randint(4, 8)
 
     rendering_point = math.ceil(pos_x)
     last_frame_pos_x = pos_x

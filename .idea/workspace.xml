@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="Tree generation concept is existent but not working.&#10;&#10;26.08.2026">
+    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="Leaf textures updated.&#10;&#10;31.08.2026">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Version 1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Version 1.py" afterDir="false" />
     </list>
@@ -29,20 +26,17 @@
     &quot;assignee&quot;: &quot;Hochmoor&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Hochmoor/Maturaarbeit-Devin",
-    "accountId": "2679848a-6199-442a-976f-9e1957d6c7a4"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Hochmoor/Maturaarbeit.git&quot;,
+    &quot;accountId&quot;: &quot;d98a4629-8f49-476c-bd4f-c19b95b5d523&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 0
 }</component>
   <component name="ProjectId" id="3GfdJ3eIJl2Zte4yzwVMplnLo7L" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -73,7 +67,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-e0ed3721d81e-36ea0e71a18c-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.25410.159" />
+        <option value="bundled-python-sdk-f2b7a9f6281b-6e1f45a539f7-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-253.29346.142" />
       </set>
     </attachedChunks>
   </component>
@@ -221,7 +215,31 @@
       <option name="project" value="LOCAL" />
       <updated>1787774005648</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Trying to find the ground height at a given point to know where to place trees.&#10;&#10;27.08.2026">
+      <option name="closed" value="true" />
+      <created>1787864230445</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1787864230446</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Added leaf textures.&#10;&#10;28.08.2026">
+      <option name="closed" value="true" />
+      <created>1787944553458</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1787944553459</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Tree generation concept working. Has yet to be applied in both directions.&#10;As if for now too much grass is removed.&#10;&#10;31.08.2026">
+      <option name="closed" value="true" />
+      <created>1788207578397</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1788207578397</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -265,6 +283,9 @@
     <MESSAGE value="First step of adding trees to the game. A tree is displayed now using dirt and grass because the proper blocks don't exist yet. Just serves as a demonstration.&#10;&#10;25.08.2026" />
     <MESSAGE value="Due to performance issues the world height was reduced again. Now there are just stone and deep rock layers. Magma will be used for structures.&#10;&#10;26.08.2026" />
     <MESSAGE value="Tree generation concept is existent but not working.&#10;&#10;26.08.2026" />
-    <option name="LAST_COMMIT_MESSAGE" value="Tree generation concept is existent but not working.&#10;&#10;26.08.2026" />
+    <MESSAGE value="Trying to find the ground height at a given point to know where to place trees.&#10;&#10;27.08.2026" />
+    <MESSAGE value="Added leaf textures.&#10;&#10;28.08.2026" />
+    <MESSAGE value="Tree generation concept working. Has yet to be applied in both directions.&#10;As if for now too much grass is removed.&#10;&#10;31.08.2026" />
+    <option name="LAST_COMMIT_MESSAGE" value="Tree generation concept working. Has yet to be applied in both directions.&#10;As if for now too much grass is removed.&#10;&#10;31.08.2026" />
   </component>
 </project>
