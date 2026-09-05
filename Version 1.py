@@ -49,6 +49,12 @@ ground_friction = 0.80
 
 blocks_pos_blocks_in_range = []
 
+#Background Texture
+background_img = pygame.image.load("background.png").convert_alpha()
+background_img = pygame.transform.scale(background_img, (screen_width,screen_height))
+background_x = pos_x
+
+#Block Textures
 stein_img = pygame.image.load("stone.png").convert_alpha()
 stein_img = pygame.transform.scale(stein_img, (block_size, block_size))
 gras_img = pygame.image.load("grass.png").convert_alpha()
@@ -253,9 +259,6 @@ for z in range(74): # 74 because blocks pos is 84 rows long and I want 5 blocks 
         if tree_density_mode == 3:
             next_tree = random.randint(4, 8)
 
-
-
-
 def build_blocks_in_range(cur_pos_x, cur_pos_y): #cur is for current because pos_y is not updated yet when the function runs for the first time.
 # This function allows the pos_x and pos_y to be updated individually to make collision checking work.
     blocks_in_range = []
@@ -311,6 +314,18 @@ on_ground = False
 done = False
 while not done:
     screen.fill(white)
+
+    #Makes the Background loop
+    if background_x >= 0.5 * screen_width:
+        background_x = background_x - screen_width
+
+    if background_x <= - 0.5 * screen_width:
+        background_x = background_x + screen_width
+
+    # Displaying the Background
+    screen.blit(background_img, (- background_x - 0.5 * screen_width,0))
+    screen.blit(background_img, (- background_x + 0.5 * screen_width,0))
+
     # DRAWING THE PLAYER
     pygame.draw.rect(screen, black, player_rect)
 
@@ -634,6 +649,11 @@ while not done:
                 next_tree_negative = random.randint(4, 8)
 
     rendering_point = math.ceil(pos_x)
+
+    # Updating Background Position
+    background_x = background_x + 2 * (pos_x - last_frame_pos_x)
+
+
     last_frame_pos_x = pos_x
     last_frame_pos_y = pos_y
     pygame.display.flip()
