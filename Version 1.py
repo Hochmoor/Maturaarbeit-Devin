@@ -475,7 +475,33 @@ while not done:
                 if rect_1.colliderect(mouse_following_rect):
                     mined_block_type = blocks_pos[z + rendering_point + rendering_offset][y]  # Remember which block we're about to remove
                     inventory[mined_block_type] = inventory.get(mined_block_type, 0) + 1       # Add one of that block to the inventory
-                    blocks_pos[z + rendering_point + rendering_offset][y] = 0 # Removing the block by setting it to zero
+
+                    # Get the world X coordinate of the block being mined
+                    world_x = z + rendering_point + rendering_offset - 42
+
+                    # Calculate the terrain height at this X position
+                    x_octave1 = world_x / scale_octave1
+                    x_octave2 = world_x / scale_octave2
+                    x_octave3 = world_x / scale_octave3
+
+                    noise_value = (round(get_noise_octave1(x_octave1) * amplitude_octave1) + round(get_noise_octave2(x_octave2) * amplitude_octave2))
+
+                    if noise_value > 10:
+                        noise_value += round(get_noise_octave3(x_octave3) * amplitude_octave3)
+                    elif noise_value > 5:
+                        noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
+
+                    # This is the Y-coordinate of the surface block
+                    surface_y = 40 + noise_value
+
+                    # Blocks above the surface -> remove completely
+                    if y > surface_y:
+                        blocks_pos[z + rendering_point + rendering_offset][y] = 0
+
+                    # Blocks at or below the surface -> turn black
+                    else:
+                        blocks_pos[z + rendering_point + rendering_offset][y] = 0.5
+
 
     #Checking 7x7 blocks around player
     if right_mouse_pressed:
