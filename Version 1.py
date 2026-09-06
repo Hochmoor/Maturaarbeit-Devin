@@ -54,30 +54,40 @@ background_img = pygame.image.load("background_2.png").convert_alpha()
 background_img = pygame.transform.scale(background_img, (screen_width,screen_height))
 background_x = pos_x
 
+# Slime Frames
+slime_frame = 0
+slime_frames = [
+    pygame.transform.scale(pygame.image.load("slime 1.png").convert_alpha(), (block_size, block_size)),
+    pygame.transform.scale(pygame.image.load("slime 2.png").convert_alpha(), (block_size, block_size)),
+    pygame.transform.scale(pygame.image.load("slime 3.png").convert_alpha(), (block_size, block_size)),
+    pygame.transform.scale(pygame.image.load("slime 4.png").convert_alpha(), (block_size, block_size)),
+    pygame.transform.scale(pygame.image.load("slime 5.png").convert_alpha(), (block_size, block_size)),
+]
+
+
 
 # Block Textures
 stone_img = pygame.image.load("stone.png").convert_alpha()
 stone_dark_img = stone_img.copy()
-stone_dark_img.fill((100, 100, 100), special_flags=pygame.BLEND_RGB_MULT)
+stone_dark_img.fill((0, 0, 0), special_flags=pygame.BLEND_RGB_MULT)
 stone_img = pygame.transform.scale(stone_img, (block_size, block_size))
 stone_dark_img = pygame.transform.scale(stone_dark_img, (block_size, block_size))
 
 grass_img = pygame.image.load("grass.png").convert_alpha()
 grass_dark_img = grass_img.copy()
-grass_dark_img.fill((200, 200, 200), special_flags=pygame.BLEND_RGB_MULT)
 grass_img = pygame.transform.scale(grass_img, (block_size, block_size))
 grass_dark_img = pygame.transform.scale(grass_dark_img, (block_size, block_size))
 
 
 dirt_img = pygame.image.load("dirt.png").convert_alpha()
 dirt_dark_img = dirt_img.copy()
-dirt_dark_img.fill((200, 200, 200), special_flags=pygame.BLEND_RGB_MULT)
+dirt_dark_img.fill((50, 50, 50), special_flags=pygame.BLEND_RGB_MULT)
 dirt_img = pygame.transform.scale(dirt_img, (block_size, block_size))
 dirt_dark_img = pygame.transform.scale(dirt_dark_img, (block_size, block_size))
 
 deep_rock_img = pygame.image.load("deep rock.png").convert_alpha()
 deep_rock_dark_img = deep_rock_img.copy()
-deep_rock_dark_img.fill((200, 200, 200), special_flags=pygame.BLEND_RGB_MULT)
+deep_rock_dark_img.fill((50, 50, 50), special_flags=pygame.BLEND_RGB_MULT)
 deep_rock_img = pygame.transform.scale(deep_rock_img, (block_size, block_size))
 deep_rock_dark_img = pygame.transform.scale(deep_rock_dark_img, (block_size, block_size))
 
@@ -89,13 +99,11 @@ magma_dark_img = pygame.transform.scale(magma_dark_img, (block_size, block_size)
 
 leaf_light_img = pygame.image.load("leaf_light.png").convert_alpha()
 leaf_light_dark_img = leaf_light_img.copy()
-leaf_light_dark_img.fill((200, 200, 200), special_flags=pygame.BLEND_RGB_MULT)
 leaf_light_img = pygame.transform.scale(leaf_light_img, (block_size, block_size))
 leaf_light_dark_img = pygame.transform.scale(leaf_light_dark_img, (block_size, block_size))
 
 leaf_dark_img = pygame.image.load("leaf_dark.png").convert_alpha()
 leaf_dark_dark_img = leaf_dark_img.copy()
-leaf_dark_dark_img.fill((200, 200, 200), special_flags=pygame.BLEND_RGB_MULT)
 leaf_dark_img = pygame.transform.scale(leaf_dark_img, (block_size, block_size))
 leaf_dark_dark_img = pygame.transform.scale(leaf_dark_dark_img, (block_size, block_size))
 
@@ -105,6 +113,8 @@ wood_dark_img.fill((200, 200, 200), special_flags=pygame.BLEND_RGB_MULT)
 wood_img = pygame.transform.scale(wood_img, (block_size, block_size))
 wood_dark_img = pygame.transform.scale(wood_dark_img, (block_size, block_size))
 
+slime_img = pygame.image.load("slime.png").convert_alpha()
+slime_img = pygame.transform.scale(slime_img, (block_size, block_size))
 
 #Structures
 tree = [[0,0,6,6,7,0],
@@ -246,12 +256,12 @@ for z in range(84):
 for z in range(84):
     for y in range (len(diggers_positive_pos)):
         if diggers_positive_pos[y][0] <= 64:
-            if blocks_pos[z][diggers_positive_pos[y][0]] != 0:
-                blocks_pos[z][diggers_positive_pos[y][0]]+= 1000
-            if blocks_pos[z][diggers_positive_pos[y][0] - 1] != 0:
-                blocks_pos[z][diggers_positive_pos[y][0] - 1] += 1000
-            if blocks_pos[z][diggers_positive_pos[y][0] + 1] != 0:
-                blocks_pos[z][diggers_positive_pos[y][0] + 1] += 1000
+            if blocks_pos[z][diggers_positive_pos[y][0]] != 0 and blocks_pos[z][diggers_positive_pos[y][0]] != 1:
+                blocks_pos[z][diggers_positive_pos[y][0]] = 0.5
+            if blocks_pos[z][diggers_positive_pos[y][0] - 1] != 0 and blocks_pos[z][diggers_positive_pos[y][0] - 1] != 1:
+                blocks_pos[z][diggers_positive_pos[y][0] - 1] = 0.5
+            if blocks_pos[z][diggers_positive_pos[y][0] + 1] != 0 and blocks_pos[z][diggers_positive_pos[y][0] + 1] != 1:
+                blocks_pos[z][diggers_positive_pos[y][0] + 1] = 0.5
 
             #Check if target was met
             if diggers_positive_pos[y][0] == diggers_positive_pos[y][2]:
@@ -302,7 +312,7 @@ def build_blocks_in_range(cur_pos_x, cur_pos_y): #cur is for current because pos
     for a in range(3):  # This creates a 3x3 box around the player where collision will be checked
         for b in range(3):
             if 2 <= blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(cur_pos_y - 17) + b] <= 1000:
-                blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(cur_pos_y - 17) + b] *= -1  # Make the number negative to be detected when drawing blocks_pos
+                blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(cur_pos_y - 17) + b] *= -1  # Make the number negative to be detected when listing them in blocks_in_range (to later check collisions with colliderect)
 
     for z in range(84):
         for y in range(world_height):
@@ -451,8 +461,8 @@ while not done:
     if left_mouse_pressed:
         for a in range(7):
             for b in range(7):
-                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] != 0:
-                    blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] *= -1
+                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] != 0 and blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] != 0.5:
+                    blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] *= -1 # making the blocks in range negative for it to be detected later.
 
     blocks_in_range_mouse = [] # Emptying the list
     for z in range(84):
@@ -472,8 +482,8 @@ while not done:
         print("right_mouse_pressed")
         for a in range(7):
             for b in range(7):
-                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0:
-                    blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] = -1
+                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0 or blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0.5 :
+                    blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] *= -1
 
     blocks_in_range_mouse = [] # Emptying the list
     for z in range(84):
@@ -482,47 +492,34 @@ while not done:
                 # Create the Rect object: (x, y, width, height)
                 rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), block_size, block_size)
                 blocks_in_range_mouse.append(rect_1)
-                blocks_pos[z + rendering_point + rendering_offset][y] = 0  # putting it back to the original state 0 = Air
+                blocks_pos[z + rendering_point + rendering_offset][y] *= -1   # putting it back to the original state 0 = Air
                 if rect_1.colliderect(mouse_following_rect) and not rect_1.colliderect(player_rect):
                     if inventory.get(selected_block, 0) > 0:                  # Only place if we actually have one in the inventory
                         blocks_pos[z + rendering_point + rendering_offset][y] = selected_block
                         inventory[selected_block] -= 1                        # Placing costs one block from the inventory
 
-
-    # DRAWING THE BLOCKS
     for z in range(84):
         for y in range(world_height):
-            if blocks_pos[z + rendering_point + rendering_offset][y] == 1001:
-                screen.blit(grass_dark_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size)))
-
-            if blocks_pos[z + rendering_point + rendering_offset][y] == 1002:
-                screen.blit(dirt_dark_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size)))
-
-            if blocks_pos[z + rendering_point + rendering_offset][y] == 1003:
-                screen.blit(stone_dark_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y*block_size - (pos_y * block_size)))
-
-            if blocks_pos[z + rendering_point + rendering_offset][y] == 1004:
-                screen.blit(deep_rock_dark_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y*block_size - (pos_y * block_size)))
-
-            if blocks_pos[z + rendering_point + rendering_offset][y] == 1005:
-                screen.blit(magma_dark_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y*block_size - (pos_y * block_size)))
-
-            if blocks_pos[z + rendering_point + rendering_offset][y] == 1006:
-                screen.blit(leaf_light_dark_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y*block_size - (pos_y * block_size)))
-
-            if blocks_pos[z + rendering_point + rendering_offset][y] == 1007:
-                screen.blit(leaf_dark_dark_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y*block_size - (pos_y * block_size)))
-
-            if blocks_pos[z + rendering_point + rendering_offset][y] == 1008:
-                screen.blit(wood_dark_img, ((z - pos_x + rendering_point) * block_size - block_size * 10,screen_height - block_size - y * block_size - (pos_y * block_size)))
+            if blocks_pos[z + rendering_point + rendering_offset][y] == 0.5:
+                black_rect = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size), block_size, block_size)
+                pygame.draw.rect(screen,black,black_rect)
 
     # DRAWING THE PLAYER
-    pygame.draw.rect(screen, black, player_rect)
+    slime_frame += 0.1
+    if slime_frame >= 5:
+        slime_frame = 0
 
+    screen.blit(slime_frames[math.floor(slime_frame)], ((screen_width//2 - block_size // 2),(screen_height//2 - block_size // 2)))
+
+
+# DRAWING THE BLOCKS
     for z in range(84):
         for y in range(world_height):
             if blocks_pos[z + rendering_point + rendering_offset][y] == 0:
                 continue
+
+
+
             if blocks_pos[z + rendering_point + rendering_offset][y] == 1:
                 screen.blit(grass_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size)))
 

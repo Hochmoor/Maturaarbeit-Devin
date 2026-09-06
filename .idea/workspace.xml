@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="background.png&#10;&#10;05.09.2026">
+    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="background_2.png&#10;&#10;05.09.2026">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Version 1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Version 1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leafe_dark.png" beforeDir="false" afterPath="$PROJECT_DIR$/leaf_dark.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leafe_light.png" beforeDir="false" afterPath="$PROJECT_DIR$/leaf_light.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -273,7 +271,23 @@
       <option name="project" value="LOCAL" />
       <updated>1788614602958</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Experimenting with caves that aren't see-trough.&#10;&#10;05.09.2026">
+      <option name="closed" value="true" />
+      <created>1788634578784</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1788634578784</updated>
+    </task>
+    <task id="LOCAL-00026" summary="background_2.png&#10;&#10;05.09.2026">
+      <option name="closed" value="true" />
+      <created>1788634595511</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1788634595511</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -300,7 +314,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Working cave generation in both directions.&#10;09.09.2026" />
     <MESSAGE value="About to implement collision&#10;11.09.2026" />
     <MESSAGE value="Collision still doesn't quite work&#10;12.09.2026" />
     <MESSAGE value="The right blocks are now converted into the right rectangles.&#10;No collision detection yet.&#10;12.09.2026" />
@@ -324,6 +337,8 @@
     <MESSAGE value="Experimenting with other sorts of trees.&#10;&#10;03.09.2026" />
     <MESSAGE value="Implemented a self-made background.&#10;&#10;05.09.2026" />
     <MESSAGE value="background.png&#10;&#10;05.09.2026" />
-    <option name="LAST_COMMIT_MESSAGE" value="background.png&#10;&#10;05.09.2026" />
+    <MESSAGE value="Experimenting with caves that aren't see-trough.&#10;&#10;05.09.2026" />
+    <MESSAGE value="background_2.png&#10;&#10;05.09.2026" />
+    <option name="LAST_COMMIT_MESSAGE" value="background_2.png&#10;&#10;05.09.2026" />
   </component>
 </project>
