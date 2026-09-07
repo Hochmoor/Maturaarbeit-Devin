@@ -221,7 +221,9 @@ inventory_open = False  # Toggled by pressing "E"
 
 inventory_font = pygame.font.SysFont(None, max(18, block_size))
 
+# Creating blocks_pos and blocks_pos height to keep track of the terrain height.
 blocks_pos = [[0 for _ in range(world_height)] for _ in range(84)]
+blocks_pos_height = []
 
 
 for z in range(84):
@@ -235,6 +237,7 @@ for z in range(84):
         noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
 
     print("noise value",noise_value)
+    blocks_pos_height.append(40 + noise_value)
     blocks_pos[z][40 + noise_value] = 1
     blocks_pos[z][40 + noise_value - 1 ] = 2
     blocks_pos[z][40 + noise_value - 2 ] = 2
@@ -251,7 +254,7 @@ for z in range(84):
     for i in range(12):
         blocks_pos[z][i] = 4
 
-
+print("height",blocks_pos_height)
 
 for z in range(84):
     for y in range (len(diggers_positive_pos)):
@@ -476,31 +479,14 @@ while not done:
                     mined_block_type = blocks_pos[z + rendering_point + rendering_offset][y]  # Remember which block we're about to remove
                     inventory[mined_block_type] = inventory.get(mined_block_type, 0) + 1       # Add one of that block to the inventory
 
-                    # Get the world X coordinate of the block being mined
-                    world_x = z + rendering_point + rendering_offset - 42
+                    if blocks_pos_height[z + rendering_point + rendering_offset] <= y:
+                        blocks_pos[z + rendering_point + rendering_offset][
+                            y] = 0  # putting it back to the original state 0 = Air
 
-                    # Calculate the terrain height at this X position
-                    x_octave1 = world_x / scale_octave1
-                    x_octave2 = world_x / scale_octave2
-                    x_octave3 = world_x / scale_octave3
-
-                    noise_value = (round(get_noise_octave1(x_octave1) * amplitude_octave1) + round(get_noise_octave2(x_octave2) * amplitude_octave2))
-
-                    if noise_value > 10:
-                        noise_value += round(get_noise_octave3(x_octave3) * amplitude_octave3)
-                    elif noise_value > 5:
-                        noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
-
-                    # This is the Y-coordinate of the surface block
-                    surface_y = 40 + noise_value
-
-                    # Blocks above the surface -> remove completely
-                    if y > surface_y:
-                        blocks_pos[z + rendering_point + rendering_offset][y] = 0
-
-                    # Blocks at or below the surface -> turn black
                     else:
                         blocks_pos[z + rendering_point + rendering_offset][y] = 0.5
+                        print("happened")
+
 
 
     #Checking 7x7 blocks around player
@@ -508,8 +494,8 @@ while not done:
         print("right_mouse_pressed")
         for a in range(7):
             for b in range(7):
-                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0 or blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0.5 :
-                    blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] *= -1
+                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0:
+                    blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] = -1
 
     blocks_in_range_mouse = [] # Emptying the list
     for z in range(84):
@@ -518,12 +504,13 @@ while not done:
                 # Create the Rect object: (x, y, width, height)
                 rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), block_size, block_size)
                 blocks_in_range_mouse.append(rect_1)
-                blocks_pos[z + rendering_point + rendering_offset][y] *= -1   # putting it back to the original state 0 = Air
+                blocks_pos[z + rendering_point + rendering_offset][y] = 0  # putting it back to the original state 0 = Air
                 if rect_1.colliderect(mouse_following_rect) and not rect_1.colliderect(player_rect):
                     if inventory.get(selected_block, 0) > 0:                  # Only place if we actually have one in the inventory
                         blocks_pos[z + rendering_point + rendering_offset][y] = selected_block
                         inventory[selected_block] -= 1                        # Placing costs one block from the inventory
 
+# Drawing the black rects separately so they appear behind the player.
     for z in range(84):
         for y in range(world_height):
             if blocks_pos[z + rendering_point + rendering_offset][y] == 0.5:
@@ -585,6 +572,8 @@ while not done:
         elif noise_value > 5:
             noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
         print("noise value",noise_value)
+        blocks_pos_height.append(40 + noise_value)
+        print("blocks_pos_height", blocks_pos_height)
         blocks_pos.append([0 for _ in range(world_height)])
         blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value] = 1
         blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value - 1] = 2
@@ -667,6 +656,8 @@ while not done:
         elif noise_value > 5:
             noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
         print("noise value", noise_value)
+        blocks_pos_height.insert(0,40 + noise_value)
+        print("blocks_pos_height",blocks_pos_height)
         blocks_pos.insert(0,[0 for _ in range(world_height)])
 
         blocks_pos[0][40 + noise_value] = 1
