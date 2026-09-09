@@ -494,7 +494,7 @@ while not done:
         print("right_mouse_pressed")
         for a in range(7):
             for b in range(7):
-                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0:
+                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0 or blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0.5:
                     blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] = -1
 
     blocks_in_range_mouse = [] # Emptying the list
@@ -594,9 +594,14 @@ while not done:
 
         for y in range(len(diggers_positive_pos)):
             if diggers_positive_pos[y][0] <= 64:
-                blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0]] = 0
-                blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] - 1] = 0
-                blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] + 1] = 0
+                if blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0]] != 0 and blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0]] != 1:
+                    blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0]] = 0.5
+                if blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] - 1] != 0 and blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] - 1] != 1:
+                    blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] - 1] = 0.5
+                if blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] + 1] != 0 and blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] + 1] != 1:
+                    blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] + 1] = 0.5
+
+
 
                 # Check if target was met
                 if diggers_positive_pos[y][0] == diggers_positive_pos[y][2]:
