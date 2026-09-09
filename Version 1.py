@@ -629,7 +629,7 @@ while not done:
         one_percent = random.randint(1, 100)
         if one_percent == 100:
             tree_density_mode = random.randint(1, 3)
-        if next_tree == 0:
+        if next_tree == 0.5:
             x_octave1 = (42 - 3 + new_render_positive) / scale_octave1
             x_octave2 = (42 - 3 + new_render_positive) / scale_octave2
             x_octave3 = (42 - 3 + new_render_positive) / scale_octave3
@@ -691,9 +691,9 @@ while not done:
             if diggers_negative_pos[y][0] <= 64:
                 if blocks_pos[0][diggers_negative_pos[y][0]] != 0 and blocks_pos[0][diggers_negative_pos[y][0]] != 1:
                     blocks_pos[0][diggers_negative_pos[y][0]] = 0.5
-                if blocks_pos[0][diggers_negative_pos[y][0] + 1] != 0 and blocks_pos[0][diggers_negative_pos[y][0] + 1] != 1:
-                    blocks_pos[0][diggers_negative_pos[y][0] - 1] = 0.5
                 if blocks_pos[0][diggers_negative_pos[y][0] - 1] != 0 and blocks_pos[0][diggers_negative_pos[y][0] - 1] != 1:
+                    blocks_pos[0][diggers_negative_pos[y][0] - 1] = 0.5
+                if blocks_pos[0][diggers_negative_pos[y][0] + 1] != 0 and blocks_pos[0][diggers_negative_pos[y][0] + 1] != 1:
                     blocks_pos[0][diggers_negative_pos[y][0] + 1] = 0.5
 
                 # Check if target was met
@@ -716,7 +716,7 @@ while not done:
         one_percent = random.randint(1, 100)
         if one_percent == 100:
             tree_density_mode_negative = random.randint(1, 3)
-        if next_tree_negative == -2:
+        if next_tree_negative == 0.5:
 
             ground_height = blocks_pos_height[5]
 
