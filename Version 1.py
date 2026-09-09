@@ -495,7 +495,7 @@ while not done:
         for a in range(7):
             for b in range(7):
                 if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0 or blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0.5:
-                    blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] = -1
+                    blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] *= -1
 
     blocks_in_range_mouse = [] # Emptying the list
     for z in range(84):
@@ -504,7 +504,7 @@ while not done:
                 # Create the Rect object: (x, y, width, height)
                 rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), block_size, block_size)
                 blocks_in_range_mouse.append(rect_1)
-                blocks_pos[z + rendering_point + rendering_offset][y] = 0  # putting it back to the original state 0 = Air
+                blocks_pos[z + rendering_point + rendering_offset][y] *= -1  # putting it back to the original state 0 = Air
                 if rect_1.colliderect(mouse_following_rect) and not rect_1.colliderect(player_rect):
                     if inventory.get(selected_block, 0) > 0:                  # Only place if we actually have one in the inventory
                         blocks_pos[z + rendering_point + rendering_offset][y] = selected_block

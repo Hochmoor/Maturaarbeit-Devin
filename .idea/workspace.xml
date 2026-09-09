@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="cave height checking system doesn't yet work.&#10;&#10;06.09.2026">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="Encountering bug were cave become air when attempting to place a block.&#10;&#10;09.09.2026">
       <change beforePath="$PROJECT_DIR$/Version 1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Version 1.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -303,7 +302,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788724918175</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="Encountering bug were cave become air when attempting to place a block.&#10;&#10;09.09.2026">
+      <option name="closed" value="true" />
+      <created>1788979980537</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1788979980537</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -330,7 +337,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="The right blocks are now converted into the right rectangles.&#10;No collision detection yet.&#10;12.09.2026" />
     <MESSAGE value="Collision detection working!&#10;Physics not yet implemented.&#10;12.09.2026" />
     <MESSAGE value="Last Commit and Push didn't work. Now trying again.&#10;&#10;Collision detection working and stops player (physics implemented), but still unusable.&#10;13.09.2026" />
     <MESSAGE value="The Original Version 1 HUP.py&#10;17.08.2026" />
@@ -355,6 +361,7 @@
     <MESSAGE value="background_2.png&#10;&#10;05.09.2026" />
     <MESSAGE value="Animated Slime!&#10;Also working on a cave background system.&#10;&#10;06.09.2026" />
     <MESSAGE value="cave height checking system doesn't yet work.&#10;&#10;06.09.2026" />
-    <option name="LAST_COMMIT_MESSAGE" value="cave height checking system doesn't yet work.&#10;&#10;06.09.2026" />
+    <MESSAGE value="Encountering bug were cave become air when attempting to place a block.&#10;&#10;09.09.2026" />
+    <option name="LAST_COMMIT_MESSAGE" value="Encountering bug were cave become air when attempting to place a block.&#10;&#10;09.09.2026" />
   </component>
 </project>
