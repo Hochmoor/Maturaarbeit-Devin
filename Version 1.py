@@ -494,7 +494,10 @@ while not done:
         print("right_mouse_pressed")
         for a in range(7):
             for b in range(7):
-                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0 or blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0.5:
+                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0:
+                    blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] -= 1
+
+                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0.5:
                     blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] *= -1
 
     blocks_in_range_mouse = [] # Emptying the list
@@ -504,7 +507,10 @@ while not done:
                 # Create the Rect object: (x, y, width, height)
                 rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), block_size, block_size)
                 blocks_in_range_mouse.append(rect_1)
-                blocks_pos[z + rendering_point + rendering_offset][y] *= -1  # putting it back to the original state 0 = Air
+                if blocks_pos[z + rendering_point + rendering_offset][y] == -1:
+                    blocks_pos[z + rendering_point + rendering_offset][y] = 0
+                if blocks_pos[z + rendering_point + rendering_offset][y] == - 0.5:
+                    blocks_pos[z + rendering_point + rendering_offset][y] *= -1  # putting it back to the original state 0 = Air
                 if rect_1.colliderect(mouse_following_rect) and not rect_1.colliderect(player_rect):
                     if inventory.get(selected_block, 0) > 0:                  # Only place if we actually have one in the inventory
                         blocks_pos[z + rendering_point + rendering_offset][y] = selected_block
@@ -683,9 +689,12 @@ while not done:
 
         for y in range(len(diggers_negative_pos)):
             if diggers_negative_pos[y][0] <= 64:
-                blocks_pos[0][diggers_negative_pos[y][0]] = 0
-                blocks_pos[0][diggers_negative_pos[y][0] - 1] = 0
-                blocks_pos[0][diggers_negative_pos[y][0] + 1] = 0
+                if blocks_pos[0][diggers_negative_pos[y][0]] != 0 and blocks_pos[0][diggers_negative_pos[y][0]] != 1:
+                    blocks_pos[0][diggers_negative_pos[y][0]] = 0.5
+                if blocks_pos[0][diggers_negative_pos[y][0] + 1] != 0 and blocks_pos[0][diggers_negative_pos[y][0] + 1] != 1:
+                    blocks_pos[0][diggers_negative_pos[y][0] - 1] = 0.5
+                if blocks_pos[0][diggers_negative_pos[y][0] - 1] != 0 and blocks_pos[0][diggers_negative_pos[y][0] - 1] != 1:
+                    blocks_pos[0][diggers_negative_pos[y][0] + 1] = 0.5
 
                 # Check if target was met
                 if diggers_negative_pos[y][0] == diggers_negative_pos[y][2]:
@@ -707,22 +716,14 @@ while not done:
         one_percent = random.randint(1, 100)
         if one_percent == 100:
             tree_density_mode_negative = random.randint(1, 3)
-        if next_tree_negative == 0:
-            x_octave1 = (-42 + 7 + new_render_negative) / scale_octave1
-            x_octave2 = (-42 + 7 + new_render_negative) / scale_octave2
-            x_octave3 = (-42 + 7 + new_render_negative) / scale_octave3
-            noise_value = round(get_noise_octave1(x_octave1) * amplitude_octave1) + round(
-                get_noise_octave2(x_octave2) * amplitude_octave2)
-            if noise_value > 10:
-                noise_value += round(get_noise_octave3(x_octave3) * amplitude_octave3)
-            elif noise_value > 5:
-                noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
-            ground_height = noise_value
-            print("noise value", noise_value)
+        if next_tree_negative == -2:
+
+            ground_height = blocks_pos_height[5]
+
             for a in range(len(tree)):
                 for b in range(len(tree[a])):
-                    if blocks_pos[a + 5][b + ground_height + 40] == 0 or blocks_pos[a + 5][b + ground_height + 40] == 1:
-                        blocks_pos[a + 5][b + ground_height + 40] = tree[a][b]
+                    if blocks_pos[a + 3][b + ground_height] == 0 or blocks_pos[a + 3][b + ground_height] == 1:
+                        blocks_pos[a + 3][b + ground_height] = tree[a][b]
 
             if tree_density_mode_negative == 1:
                 next_tree_negative = random.randint(16, 40)
