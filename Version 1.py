@@ -213,8 +213,8 @@ offset = 0
 # INVENTORY
 # The inventory keeps track of how many and what kind of blocks the player is carrying.
 # The dictionary keys match the numbers used in blocks_pos.
-inventory = {1: 0, 2: 0, 3: 0} # Inventory can be expanded easily
-block_names = {1: "Grass", 2: "Dirt", 3: "Stone"}
+inventory = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0} # Inventory can be expanded easily
+block_names = {1: "Grass", 2: "Dirt", 3: "Stone", 4: "Leaf Light", 5: "Leaf Dark", 6: "Wood", 7: "Deep Rock", 8: "Coal", 9: "Copper", 10: "Iron", 11: "Diamond", 12: "Mystium"}
 block_images = {1: grass_img, 2: dirt_img, 3: stone_img}
 selected_block = 3      # Block currently selected to place
 inventory_open = False  # Toggled by pressing "E"
@@ -251,8 +251,12 @@ for z in range(84):
     blocks_pos[z][16] = random.choices([3, 4], [80, 20])[0]
     blocks_pos[z][17] = random.choices([3, 4], [95, 5])[0]
 
-    for i in range(12):
-        blocks_pos[z][i] = 4
+    for i in range(9):
+        blocks_pos[z][i + 3] = 4
+
+    blocks_pos[z][2] = random.choices([4, 5], [85, 15])[0]
+    blocks_pos[z][1] = random.choices([4, 5], [30, 70])[0]
+    blocks_pos[z][0] = 5
 
 print("height",blocks_pos_height)
 
@@ -464,7 +468,7 @@ while not done:
     if left_mouse_pressed:
         for a in range(7):
             for b in range(7):
-                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] != 0 and blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] != 0.5:
+                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] != 0 and blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] != 0.5 and blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] != 5:
                     blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] *= -1 # making the blocks in range negative for it to be detected later.
 
     blocks_in_range_mouse = [] # Emptying the list
@@ -563,6 +567,9 @@ while not done:
             if blocks_pos[z + rendering_point + rendering_offset][y] == 8:
                 screen.blit(wood_img, ((z - pos_x + rendering_point) * block_size - block_size * 10,screen_height - block_size - y * block_size - (pos_y * block_size)))
 
+    black_rect = pygame.Rect(0, screen_height - (pos_y * block_size), screen_width, screen_height//2)
+    pygame.draw.rect(screen, black, black_rect)
+
     # DRAWING THE INVENTORY (hotbar + optional panel)
     draw_inventory()
 
@@ -594,8 +601,12 @@ while not done:
         blocks_pos[83 + new_render_positive - new_render_negative][16] = random.choices([3, 4], [80, 20])[0]
         blocks_pos[83 + new_render_positive - new_render_negative][17] = random.choices([3, 4], [95, 5])[0]
 
-        for i in range(12):
-            blocks_pos[83 + new_render_positive - new_render_negative][i] = 4
+        for i in range(9):
+            blocks_pos[83 + new_render_positive - new_render_negative][i + 3] = 4
+
+        blocks_pos[83 + new_render_positive - new_render_negative][2] = random.choices([4, 5], [85, 15])[0]
+        blocks_pos[83 + new_render_positive - new_render_negative][1] = random.choices([4, 5], [30, 70])[0]
+        blocks_pos[83 + new_render_positive - new_render_negative][0] = 5
 
 
         for y in range(len(diggers_positive_pos)):
@@ -629,7 +640,7 @@ while not done:
         one_percent = random.randint(1, 100)
         if one_percent == 100:
             tree_density_mode = random.randint(1, 3)
-        if next_tree == 0.5:
+        if next_tree == 0:
             x_octave1 = (42 - 3 + new_render_positive) / scale_octave1
             x_octave2 = (42 - 3 + new_render_positive) / scale_octave2
             x_octave3 = (42 - 3 + new_render_positive) / scale_octave3
@@ -684,8 +695,12 @@ while not done:
         blocks_pos[0][16] = random.choices([3, 4], [80, 20])[0]
         blocks_pos[0][17] = random.choices([3, 4], [95, 5])[0]
 
-        for i in range(12):
-            blocks_pos[0][i] = 4
+        for i in range(9):
+            blocks_pos[0][i + 3] = 4
+
+        blocks_pos[0][2] = random.choices([4, 5], [85, 15])[0]
+        blocks_pos[0][1] = random.choices([4, 5], [30, 70])[0]
+        blocks_pos[0][0] = 5
 
         for y in range(len(diggers_negative_pos)):
             if diggers_negative_pos[y][0] <= 64:
@@ -716,7 +731,7 @@ while not done:
         one_percent = random.randint(1, 100)
         if one_percent == 100:
             tree_density_mode_negative = random.randint(1, 3)
-        if next_tree_negative == 0.5:
+        if next_tree_negative == 0:
 
             ground_height = blocks_pos_height[5]
 
