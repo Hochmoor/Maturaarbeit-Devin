@@ -67,7 +67,7 @@ slime_frames = [
 
 
 # Block Textures
-stone_img = pygame.image.load("stone.png").convert_alpha()
+stone_img = pygame.image.load("stone 3.png").convert_alpha()
 stone_dark_img = stone_img.copy()
 stone_dark_img.fill((0, 0, 0), special_flags=pygame.BLEND_RGB_MULT)
 stone_img = pygame.transform.scale(stone_img, (block_size, block_size))
@@ -85,7 +85,7 @@ dirt_dark_img.fill((50, 50, 50), special_flags=pygame.BLEND_RGB_MULT)
 dirt_img = pygame.transform.scale(dirt_img, (block_size, block_size))
 dirt_dark_img = pygame.transform.scale(dirt_dark_img, (block_size, block_size))
 
-deep_rock_img = pygame.image.load("deep rock.png").convert_alpha()
+deep_rock_img = pygame.image.load("deep rock 4.png").convert_alpha()
 deep_rock_dark_img = deep_rock_img.copy()
 deep_rock_dark_img.fill((50, 50, 50), special_flags=pygame.BLEND_RGB_MULT)
 deep_rock_img = pygame.transform.scale(deep_rock_img, (block_size, block_size))
