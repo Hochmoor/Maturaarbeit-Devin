@@ -41,36 +41,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.Collision Test.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Mouse demonstrator.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prorotype V.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype IV.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype IX.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype VI.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype VII.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype VIII.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype XI.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Simple Collision Test.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Version 1 HUP.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Version 1 Inventory.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Version 1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Version 2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Version1_with_gravity_collision.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Version_1_with_gravity (1).executor&quot;: &quot;Run&quot;,
-    &quot;Python.collision fix.executor&quot;: &quot;Run&quot;,
-    &quot;Python.pygame_collision_fixed.executor&quot;: &quot;Run&quot;,
-    &quot;Python.pygame_collision_player_fixed.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
-    &quot;two.files.diff.last.used.file&quot;: &quot;C:/Users/druet/PycharmProjects/Maturaarbeit/Version 1.py&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.Collision Test.executor": "Run",
+    "Python.Mouse demonstrator.executor": "Run",
+    "Python.Prorotype V.executor": "Run",
+    "Python.Prototype IV.executor": "Run",
+    "Python.Prototype IX.executor": "Run",
+    "Python.Prototype VI.executor": "Run",
+    "Python.Prototype VII.executor": "Run",
+    "Python.Prototype VIII.executor": "Run",
+    "Python.Prototype XI.executor": "Run",
+    "Python.Simple Collision Test.executor": "Run",
+    "Python.Version 1 HUP.executor": "Run",
+    "Python.Version 1 Inventory.executor": "Run",
+    "Python.Version 1(4)_ores.executor": "Run",
+    "Python.Version 1.executor": "Run",
+    "Python.Version 2.executor": "Run",
+    "Python.Version1_with_gravity_collision.executor": "Run",
+    "Python.Version_1_with_gravity (1).executor": "Run",
+    "Python.collision fix.executor": "Run",
+    "Python.pygame_collision_fixed.executor": "Run",
+    "Python.pygame_collision_player_fixed.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "two.files.diff.last.used.file": "C:/Users/druet/PycharmProjects/Maturaarbeit/Version 1(4)_ores.py"
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

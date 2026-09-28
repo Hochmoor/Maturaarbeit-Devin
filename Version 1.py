@@ -43,7 +43,7 @@ gravity = 0.025
 jump_speed = 0.5
 move_acceleration = 0.7
 max_run_speed = 6.0
-max_fall_speed = 16.0
+max_fall_speed = 10
 air_drag = 0.92
 ground_friction = 0.80
 
@@ -115,6 +115,18 @@ wood_dark_img = pygame.transform.scale(wood_dark_img, (block_size, block_size))
 
 slime_img = pygame.image.load("slime.png").convert_alpha()
 slime_img = pygame.transform.scale(slime_img, (block_size, block_size))
+
+copper_img = pygame.image.load("copper 3.png").convert_alpha()
+copper_img = pygame.transform.scale(copper_img, (block_size, block_size))
+
+iron_img = pygame.image.load("iron.png").convert_alpha()
+iron_img = pygame.transform.scale(iron_img, (block_size, block_size))
+
+diamond_img = pygame.image.load("diamond.png").convert_alpha()
+diamond_img = pygame.transform.scale(diamond_img, (block_size, block_size))
+
+mysticite_img = pygame.image.load("mysticite.png").convert_alpha()
+mysticite_img = pygame.transform.scale(mysticite_img, (block_size, block_size))
 
 #Structures
 tree = [[0,0,6,6,7,0],
@@ -203,6 +215,68 @@ def get_noise_octave3(pos_for_noise):
     return seed_values_octave_3[p1] * (1 - t) + seed_values_octave_3[p2] * t
 
 
+# ORE GENERATION
+ore_block_types = (9, 10, 11, 12) #copper, iron, diamond, mysticite
+ore_cluster_gap = 2 # Minimal distance between ores
+
+# Checking distance to nearby ores
+def ore_cluster_nearby(x, y):
+    for check_x in range(max(0, x - ore_cluster_gap),# max is used to prevent the value from going negative
+                         min(len(blocks_pos), x + ore_cluster_gap + 1)):# min is used to take the lower value and prevents checking of blocks pos positions that aren't generated yet. +1 is because ranges (3,5) don't include 5.
+        for check_y in range(max(0, y - ore_cluster_gap), # max avoids checking under 0
+                             min(world_height, y + ore_cluster_gap + 1)): # min avoids checking over world height
+            if abs(check_x - x) + abs(check_y - y) <= ore_cluster_gap: # adding the two absolute values
+                if blocks_pos[check_x][check_y] in ore_block_types: # checking blocks pos for ores
+                    return True
+    return False
+
+def try_generate_ore_vein(x, ore_type, host_block, chance):
+    if random.random() >= chance: #random.random gives a some number between 0 and 1, chance could be a value 0.01 => basically 1%
+        return # if it returns it means that it exits the function and no ore is generated.
+
+    possible_starts = []
+    for y in range(world_height):
+        if blocks_pos[x][y] == host_block and not ore_cluster_nearby(x, y): #checks if on right block (stone for iron/ deep rock for diamond) and if there are other clusters nearby.
+            possible_starts.append((x, y))
+
+    if not possible_starts: # a list gives the boolean false if empty. So if no possible starts are found the function is left.
+        return
+
+    vein_size = random.randint(2, 5) # determines the vein size
+    vein_positions = [random.choice(possible_starts)] # chooses a random position from the list containing all valid start positions.
+
+    while len(vein_positions) < vein_size:
+        possible_next_blocks = []
+
+        for vein_x, vein_y in vein_positions:
+            for next_x, next_y in ((vein_x + 1, vein_y), (vein_x - 1, vein_y),
+                                   (vein_x, vein_y + 1), (vein_x, vein_y - 1)): # checking the four directly attached blocks.
+                if 0 <= next_x < len(blocks_pos) and 0 <= next_y < world_height: # Preventing the next ore to be placed in impossible pos_x
+                    if (next_x, next_y) not in vein_positions: # prevents using a block twice
+                        if blocks_pos[next_x][next_y] == host_block and not ore_cluster_nearby(next_x, next_y): #checking for the right host_block and if there are clusters nearby. # doesn't see the blocks of the vein being placed at the moment because the block values haven't switched yet.
+                            possible_next_blocks.append((next_x, next_y))
+
+        if not possible_next_blocks:
+            break # break leaves the current loop but not the whole function
+
+        vein_positions.append(random.choice(possible_next_blocks)) # add the next possible block
+
+    # Only place complete veins that have managed to grow to at least two blocks.
+    if len(vein_positions) >= 2:
+        for vein_x, vein_y in vein_positions:
+            blocks_pos[vein_x][vein_y] = ore_type #switches the blocks_pos value for the ore value (9 -> copper)
+
+# Function that when executed, executes all try_generate_ore_vein function for the different ores.
+# Here the odds for the different ores can be tweaked.
+def generate_ores_for_column(x):
+    # Copper and iron are common and replace normal stone. (the 3)
+    try_generate_ore_vein(x, 9, 3, 0.18)   # Copper
+    try_generate_ore_vein(x, 10, 3, 0.14)  # Iron
+
+    # Diamond and Mysticite only replace deep rock. (the 4)
+    try_generate_ore_vein(x, 11, 4, 0.02) # Diamond
+    try_generate_ore_vein(x, 12, 4, 0.005) # Mysticite
+
 
 # --- Pygame Setup ---
 pygame.init()
@@ -214,8 +288,9 @@ offset = 0
 # The inventory keeps track of how many and what kind of blocks the player is carrying.
 # The dictionary keys match the numbers used in blocks_pos.
 inventory = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0} # Inventory can be expanded easily
-block_names = {1: "Grass", 2: "Dirt", 3: "Stone", 4: "Leaf Light", 5: "Leaf Dark", 6: "Wood", 7: "Deep Rock", 8: "Coal", 9: "Copper", 10: "Iron", 11: "Diamond", 12: "Mystium"}
-block_images = {1: grass_img, 2: dirt_img, 3: stone_img}
+block_names = {1: "Grass", 2: "Dirt", 3: "Stone", 4: "Leaf Light", 5: "Leaf Dark", 6: "Wood", 7: "Deep Rock", 8: "Coal", 9: "Copper", 10: "Iron", 11: "Diamond", 12: "Mysticite"}
+block_images = {1: grass_img, 2: dirt_img, 3: stone_img, 9: copper_img, 10: iron_img, 11: diamond_img, 12: mysticite_img}
+inventory_display_blocks = [1, 2, 3, 9, 10, 11, 12]
 selected_block = 3      # Block currently selected to place
 inventory_open = False  # Toggled by pressing "E"
 
@@ -286,6 +361,10 @@ for z in range(84):
             elif diggers_positive_pos[y][0] >= 59:
                 diggers_positive_pos[y][0] += random.randint(-2, 0)
 
+# Generate ore veins after the starting caves so ores only replace solid rock.
+for z in range(84):
+    generate_ores_for_column(z)
+
 # Drawing Trees
 for z in range(74): # 74 because blocks pos is 84 rows long and I want 5 blocks of clearance on each side
     z += 5
@@ -348,7 +427,7 @@ def draw_inventory():
     # The bigger panel only appears while the inventory is toggled open with "E".
     if inventory_open:
         panel_width = 260
-        panel_height = 50 + len(inventory) * (block_size + 10)
+        panel_height = 50 + len(inventory_display_blocks) * (block_size + 10)
         panel_rect = pygame.Rect(screen_width // 2 - panel_width // 2, screen_height // 2 - panel_height // 2, panel_width, panel_height)
         pygame.draw.rect(screen, white, panel_rect)
         pygame.draw.rect(screen, black, panel_rect, 2)
@@ -356,7 +435,7 @@ def draw_inventory():
         title_surface = inventory_font.render("Inventory", True, black)
         screen.blit(title_surface, (panel_rect.x + 10, panel_rect.y + 10))
 
-        for i, block_type in enumerate([1, 2, 3]):
+        for i, block_type in enumerate(inventory_display_blocks):
             row_y = panel_rect.y + 50 + i * (block_size + 10)
             icon_rect = pygame.Rect(panel_rect.x + 10, row_y, block_size, block_size)
             screen.blit(block_images[block_type], icon_rect)
@@ -567,6 +646,18 @@ while not done:
             if blocks_pos[z + rendering_point + rendering_offset][y] == 8:
                 screen.blit(wood_img, ((z - pos_x + rendering_point) * block_size - block_size * 10,screen_height - block_size - y * block_size - (pos_y * block_size)))
 
+            if blocks_pos[z + rendering_point + rendering_offset][y] == 9:
+                screen.blit(copper_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size)))
+
+            if blocks_pos[z + rendering_point + rendering_offset][y] == 10:
+                screen.blit(iron_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size)))
+
+            if blocks_pos[z + rendering_point + rendering_offset][y] == 11:
+                screen.blit(diamond_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size)))
+
+            if blocks_pos[z + rendering_point + rendering_offset][y] == 12:
+                screen.blit(mysticite_img, ((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size)))
+
     black_rect = pygame.Rect(0, screen_height - (pos_y * block_size), screen_width, screen_height//2)
     pygame.draw.rect(screen, black, black_rect)
 
@@ -635,6 +726,9 @@ while not done:
 
                 elif diggers_positive_pos[y][0] >= 59:
                     diggers_positive_pos[y][0] += random.randint(-2, 0)
+
+# Ore generation
+        generate_ores_for_column(83 + new_render_positive - new_render_negative)
 
         next_tree -= 1
         one_percent = random.randint(1, 100)
@@ -726,6 +820,9 @@ while not done:
 
                 elif diggers_negative_pos[y][0] >= 59:
                     diggers_negative_pos[y][0] += random.randint(-2, 0)
+
+# ore generation
+        generate_ores_for_column(0)
 
         next_tree_negative -= 1
         one_percent = random.randint(1, 100)
