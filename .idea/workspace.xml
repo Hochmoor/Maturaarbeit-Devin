@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="All ores are being generated and displayed properly!&#10;&#10;Max falling speed reduced to prevent the player from clipping into the ground.&#10;&#10;11.09.2026">
+    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="Blocks aren't mined instantly anymore!&#10;Added a progression system for player movement speed and mining speed.&#10;The game is (almost) finished.&#10;&#10;30.09.2026">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Version 1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Version 1.py" afterDir="false" />
     </list>
@@ -58,6 +58,7 @@
     "Python.Version 1 Inventory.executor": "Run",
     "Python.Version 1(4)_ores.executor": "Run",
     "Python.Version 1(6) - 1v1.executor": "Run",
+    "Python.Version 1(6) - timer.executor": "Run",
     "Python.Version 1.executor": "Run",
     "Python.Version 2.executor": "Run",
     "Python.Version1_with_gravity_collision.executor": "Run",
@@ -71,7 +72,7 @@
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "two.files.diff.last.used.file": "C:/Users/druet/PycharmProjects/Maturaarbeit/Version_1_6.py"
+    "two.files.diff.last.used.file": "C:/Users/druet/PycharmProjects/Maturaarbeit/Version 1(6) - timer.py"
   }
 }]]></component>
   <component name="SharedIndexes">
@@ -361,7 +362,15 @@
       <option name="project" value="LOCAL" />
       <updated>1790625467594</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="Blocks aren't mined instantly anymore!&#10;Added a progression system for player movement speed and mining speed.&#10;The game is (almost) finished.&#10;&#10;30.09.2026">
+      <option name="closed" value="true" />
+      <created>1790779807859</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1790779807859</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -388,7 +397,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added a simple form of mining.&#10;21.08.2026" />
     <MESSAGE value="Added a simple form of placing blocks.&#10;21.08.2026" />
     <MESSAGE value="Simple Inventory.&#10;Note: The display function draw_inventory is AI generated und will be reworked unless fully understood.&#10;22.08.2026" />
     <MESSAGE value="Added some self-made block textures.&#10;Also grass doesn't have a hitbox anymore.&#10;23.08.2026" />
@@ -413,6 +421,7 @@
     <MESSAGE value="Fixed cave generation bug caused by a typo.&#10;&#10;09.09.2026" />
     <MESSAGE value="Added an unbreakable block to the bottom layer to prevent the player from falling into the &quot;void&quot;.&#10;&#10;Added a black &quot;void&quot; background for realism.&#10;&#10;Added minor changes to the Inventory.&#10;&#10;10.09.2026" />
     <MESSAGE value="All ores are being generated and displayed properly!&#10;&#10;Max falling speed reduced to prevent the player from clipping into the ground.&#10;&#10;11.09.2026" />
-    <option name="LAST_COMMIT_MESSAGE" value="All ores are being generated and displayed properly!&#10;&#10;Max falling speed reduced to prevent the player from clipping into the ground.&#10;&#10;11.09.2026" />
+    <MESSAGE value="Blocks aren't mined instantly anymore!&#10;Added a progression system for player movement speed and mining speed.&#10;The game is (almost) finished.&#10;&#10;30.09.2026" />
+    <option name="LAST_COMMIT_MESSAGE" value="Blocks aren't mined instantly anymore!&#10;Added a progression system for player movement speed and mining speed.&#10;The game is (almost) finished.&#10;&#10;30.09.2026" />
   </component>
 </project>
