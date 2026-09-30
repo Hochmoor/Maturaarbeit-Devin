@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="Removed Parts of the inventory for a bigger and generally more intuitive hotbar system.&#10;&#10;30.09.2026">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="9db521ee-6925-455f-b5cf-6acfe8731875" name="Changes" comment="Minor changes for example tweaked odds for ore generation.&#10;&#10;30.09.2026">
       <change beforePath="$PROJECT_DIR$/Version 1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Version 1.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -41,41 +40,41 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.Collision Test.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Mouse demonstrator.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prorotype V.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype IV.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype IX.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype VI.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype VII.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype VIII.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Prototype XI.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Simple Collision Test.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Version 1 HUP.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Version 1 Inventory.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Version 1(4)_ores.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Version 1(6) - 1v1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Version 1(6) - timer.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Version 1(8) - hotbar.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Version 1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Version 2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Version1_with_gravity_collision.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Version_1_6.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Version_1_with_gravity (1).executor&quot;: &quot;Run&quot;,
-    &quot;Python.collision fix.executor&quot;: &quot;Run&quot;,
-    &quot;Python.pygame_collision_fixed.executor&quot;: &quot;Run&quot;,
-    &quot;Python.pygame_collision_player_fixed.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
-    &quot;two.files.diff.last.used.file&quot;: &quot;C:/Users/druet/PycharmProjects/Maturaarbeit/Version 1(9) - hotbar counters.py&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.Collision Test.executor": "Run",
+    "Python.Mouse demonstrator.executor": "Run",
+    "Python.Prorotype V.executor": "Run",
+    "Python.Prototype IV.executor": "Run",
+    "Python.Prototype IX.executor": "Run",
+    "Python.Prototype VI.executor": "Run",
+    "Python.Prototype VII.executor": "Run",
+    "Python.Prototype VIII.executor": "Run",
+    "Python.Prototype XI.executor": "Run",
+    "Python.Simple Collision Test.executor": "Run",
+    "Python.Version 1 HUP.executor": "Run",
+    "Python.Version 1 Inventory.executor": "Run",
+    "Python.Version 1(4)_ores.executor": "Run",
+    "Python.Version 1(6) - 1v1.executor": "Run",
+    "Python.Version 1(6) - timer.executor": "Run",
+    "Python.Version 1(8) - hotbar.executor": "Run",
+    "Python.Version 1.executor": "Run",
+    "Python.Version 2.executor": "Run",
+    "Python.Version1_with_gravity_collision.executor": "Run",
+    "Python.Version_1_6.executor": "Run",
+    "Python.Version_1_with_gravity (1).executor": "Run",
+    "Python.collision fix.executor": "Run",
+    "Python.pygame_collision_fixed.executor": "Run",
+    "Python.pygame_collision_player_fixed.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "two.files.diff.last.used.file": "C:/Users/druet/PycharmProjects/Maturaarbeit/Version 1(10) - hotbar counters.py"
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -387,7 +386,15 @@
       <option name="project" value="LOCAL" />
       <updated>1790789746341</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="Minor changes for example tweaked odds for ore generation.&#10;&#10;30.09.2026">
+      <option name="closed" value="true" />
+      <created>1790801402705</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1790801402705</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -414,7 +421,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added some self-made block textures.&#10;Also grass doesn't have a hitbox anymore.&#10;23.08.2026" />
     <MESSAGE value="Just a simple line of code for getting FPS but it gives important information about the max world height I can use. The new world height as it is is causing performance issues.&#10;&#10;24.08.2026" />
     <MESSAGE value="First step of adding trees to the game. A tree is displayed now using dirt and grass because the proper blocks don't exist yet. Just serves as a demonstration.&#10;&#10;25.08.2026" />
     <MESSAGE value="Due to performance issues the world height was reduced again. Now there are just stone and deep rock layers. Magma will be used for structures.&#10;&#10;26.08.2026" />
@@ -439,6 +445,7 @@
     <MESSAGE value="Blocks aren't mined instantly anymore!&#10;Added a progression system for player movement speed and mining speed.&#10;The game is (almost) finished.&#10;&#10;30.09.2026" />
     <MESSAGE value="Added a Timer.&#10;&#10;30.09.2026" />
     <MESSAGE value="Removed Parts of the inventory for a bigger and generally more intuitive hotbar system.&#10;&#10;30.09.2026" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed Parts of the inventory for a bigger and generally more intuitive hotbar system.&#10;&#10;30.09.2026" />
+    <MESSAGE value="Minor changes for example tweaked odds for ore generation.&#10;&#10;30.09.2026" />
+    <option name="LAST_COMMIT_MESSAGE" value="Minor changes for example tweaked odds for ore generation.&#10;&#10;30.09.2026" />
   </component>
 </project>

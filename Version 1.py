@@ -285,12 +285,12 @@ clock = pygame.time.Clock()
 offset = 0
 
 # HOTBAR / MINED BLOCK COUNTS
-# mined_blocks only keeps track of resources for the progression stages. It is not an inventory.
+# mined_blocks keeps track of how many blocks the player has available and is also used for progression.
 mined_blocks = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0}
 block_names = {1: "Grass", 2: "Dirt", 3: "Stone", 4: "Deep Rock", 5: "Magma", 6: "Leaf Light", 7: "Leaf Dark", 8: "Wood", 9: "Copper", 10: "Iron", 11: "Diamond", 12: "Mysticite"}
 block_images = {1: grass_img, 2: dirt_img, 3: stone_img, 4: deep_rock_img, 5: magma_img, 6: leaf_light_img, 7: leaf_dark_img, 8: wood_img, 9: copper_img, 10: iron_img, 11: diamond_img, 12: mysticite_img}
 placeable_blocks = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12]  # Every block except unmineable magma
-selected_block = 1
+selected_block = 3
 
 ui_font = pygame.font.SysFont(None, max(18, block_size))
 
@@ -590,7 +590,7 @@ def draw_hotbar():
         else:
             pygame.draw.rect(screen, black, slot_rect, 1)
 
-        # Show how many of this block have been mined.
+        # Show how many of this block are currently available.
         count_surface = ui_font.render(str(mined_blocks[block_type]), True, black)
         screen.blit(count_surface, (slot_rect.x + 2, slot_rect.bottom - count_surface.get_height()))
 
@@ -725,7 +725,9 @@ while not done:
                 if blocks_pos[z + rendering_point + rendering_offset][y] == - 0.5:
                     blocks_pos[z + rendering_point + rendering_offset][y] *= -1  # putting it back to the original state 0 = Air
                 if rect_1.colliderect(mouse_following_rect) and not rect_1.colliderect(player_rect):
-                    blocks_pos[z + rendering_point + rendering_offset][y] = selected_block
+                    if mined_blocks[selected_block] > 0:
+                        blocks_pos[z + rendering_point + rendering_offset][y] = selected_block
+                        mined_blocks[selected_block] -= 1
 
 # Drawing the black rects separately so they appear behind the player.
     for z in range(84):
