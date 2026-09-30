@@ -43,7 +43,7 @@ gravity = 0.025
 jump_speed = 0.26       # Start with a low jump (just over one block).
 move_acceleration = 0.025
 max_run_speed = 0.10    # Movement improves after stages 2, 4 and 6.
-max_fall_speed = 10
+max_fall_speed = 8
 air_drag = 0.92
 ground_friction = 0.80
 
@@ -274,8 +274,8 @@ def generate_ores_for_column(x):
     try_generate_ore_vein(x, 10, 3, 0.14)  # Iron
 
     # Diamond and Mysticite only replace deep rock. (the 4)
-    try_generate_ore_vein(x, 11, 4, 0.02) # Diamond
-    try_generate_ore_vein(x, 12, 4, 0.005) # Mysticite
+    try_generate_ore_vein(x, 11, 4, 0.04) # Diamond
+    try_generate_ore_vein(x, 12, 4, 0.015) # Mysticite
 
 
 # --- Pygame Setup ---
@@ -297,7 +297,7 @@ ui_font = pygame.font.SysFont(None, max(18, block_size))
 # PROGRESSION
 # The list contains lists with the block number and the required number for the next stage.
 # Resources are kept when a stage is completed and rewards are permanent.
-stage_goals = [[8, 20], [3, 30], [9, 20], [10, 60], [11, 50], [12, 100]]
+stage_goals = [[8, 20], [3, 40], [9, 30], [10, 60], [11, 50], [12, 100]]
 completed_stages = 0
 mining_time_multiplier = 1.0
 stage_message = ""
@@ -635,8 +635,8 @@ while not done:
         mov_x += move_acceleration
     if keys[pygame.K_a]:
         mov_x -= move_acceleration
-    if keys[pygame.K_w]:
-        if on_ground:
+    if keys[pygame.K_w] or keys[pygame.K_SPACE]:
+        if on_ground and pos_y >= -75: # Stops the player from jumping above a certain height to prevent him from going upwards infinitely. (And from crashing the Game.)
             mov_y = mov_y - jump_speed
     print(pos_x, pos_y)
     # Gravity
