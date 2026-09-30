@@ -284,17 +284,15 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 clock = pygame.time.Clock()
 offset = 0
 
-# INVENTORY
-# The inventory keeps track of how many and what kind of blocks the player is carrying.
-# The dictionary keys match the numbers used in blocks_pos.
-inventory = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0} # Inventory can be expanded easily
+# HOTBAR / MINED BLOCK COUNTS
+# mined_blocks only keeps track of resources for the progression stages. It is not an inventory.
+mined_blocks = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0}
 block_names = {1: "Grass", 2: "Dirt", 3: "Stone", 4: "Deep Rock", 5: "Magma", 6: "Leaf Light", 7: "Leaf Dark", 8: "Wood", 9: "Copper", 10: "Iron", 11: "Diamond", 12: "Mysticite"}
 block_images = {1: grass_img, 2: dirt_img, 3: stone_img, 4: deep_rock_img, 5: magma_img, 6: leaf_light_img, 7: leaf_dark_img, 8: wood_img, 9: copper_img, 10: iron_img, 11: diamond_img, 12: mysticite_img}
-inventory_display_blocks = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12]
-selected_block = 3      # Block currently selected to place
-inventory_open = False  # Toggled by pressing "E"
+placeable_blocks = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12]  # Every block except unmineable magma
+selected_block = 1
 
-inventory_font = pygame.font.SysFont(None, max(18, block_size))
+ui_font = pygame.font.SysFont(None, max(18, block_size))
 
 # PROGRESSION
 # The list contains lists with the block number and the required number for the next stage.
@@ -304,6 +302,7 @@ completed_stages = 0
 mining_time_multiplier = 1.0
 stage_message = ""
 stage_message_until = 0
+final_time = None
 
 # MINING
 # A block must be targeted continuously. Changing blocks or releasing resets it.
@@ -324,17 +323,18 @@ def get_mining_time(block_type): # Function to get the mining time of a given bl
 
 def update_progression(): # Checks once per frame if a new stage is unlocked.
     # Makes a few variables global to assign new values to them.
-    global completed_stages, mining_time_multiplier, move_acceleration, max_run_speed, jump_speed, stage_message, stage_message_until
+    global completed_stages, mining_time_multiplier, move_acceleration, max_run_speed, jump_speed, stage_message, stage_message_until, final_time
 
     # The loop also handles resources collected before their stage begins.
     while completed_stages < len(stage_goals): # Checking whether stages remain.
         goal_block, goal_amount = stage_goals[completed_stages] # Gets the goal block (Iron) and the amount to finish the stage (60).
-        if inventory[goal_block] < goal_amount: # Checks if the current amount of the
+        if mined_blocks[goal_block] < goal_amount: # Checks if the current amount of the
             break # leaves the while loop, because there is nothing after it the function finishes.
 
         completed_stages += 1 # If it doesn't break this means the next stage is completed so completed stages += 1
         if completed_stages == 6:
             mining_time_multiplier = 0.0  # 0.0 for instant mining
+            final_time = pygame.time.get_ticks() - game_start_time # Now that stage 6 is completed the final time is calculated by subtracting the startup time from the time overall.
             reward = "Instant mining + faster movement + higher jumps!"
         else:
             mining_time_multiplier /= 2
@@ -364,7 +364,7 @@ def update_mining(left_mouse_pressed, mouse_x, mouse_y): #Inputs: Is mouse press
 
     target = None
     mining_rect = None
-    if left_mouse_pressed and not inventory_open:
+    if left_mouse_pressed:
         # finding a 7x7 box around the player and turning them into rectangles to collide.
         for a in range(7):
             for b in range(7):
@@ -402,7 +402,7 @@ def update_mining(left_mouse_pressed, mouse_x, mouse_y): #Inputs: Is mouse press
 
     if mining_progress >= 1.0:
         x = world_x + rendering_offset # converts the stable world column back into its current list index.
-        inventory[block_type] += 1
+        mined_blocks[block_type] += 1
         if blocks_pos_height[x] <= y: # blocks_pos_height[x] stores the terrain’s surface height in this column.
             blocks_pos[x][y] = 0  # Air above the surface
         else:
@@ -413,17 +413,26 @@ def update_mining(left_mouse_pressed, mouse_x, mouse_y): #Inputs: Is mouse press
 
 
 def draw_progression():
+    if final_time is not None:
+        elapsed_time = final_time
+    else:
+        elapsed_time = pygame.time.get_ticks() - game_start_time
+    minutes = elapsed_time // 60000 # Calculate Minutes (Dividing milliseconds by 60'000. // = integer division = whole numbers.)
+    seconds = (elapsed_time % 60000) / 1000 # % Calculates the remainder of the division. This is divided by 1000 to convert ms to seconds.
+    timer_text = f"Time: {minutes:02}:{seconds:04.1f}"
+
     if completed_stages < len(stage_goals):
         goal_block, goal_amount = stage_goals[completed_stages]
-        lines = [f"Stage {completed_stages + 1} / 6",
+        lines = [timer_text,
+                 f"Stage {completed_stages + 1} / 6",
                  f"Collect {goal_amount} {block_names[goal_block]}",
-                 f"Progress: {inventory[goal_block]} / {goal_amount}"]
+                 f"Progress: {mined_blocks[goal_block]} / {goal_amount}"]
     else:
-        lines = ["All 6 stages complete!", "Instant mining unlocked"]
+        lines = [timer_text, "All 6 stages complete!", "Instant mining unlocked"]
 
-    text_surfaces = [inventory_font.render(line, True, white) for line in lines]
+    text_surfaces = [ui_font.render(line, True, white) for line in lines]
     panel_width = max(surface.get_width() for surface in text_surfaces) + 20
-    line_height = inventory_font.get_linesize()
+    line_height = ui_font.get_linesize()
     panel_rect = pygame.Rect(screen_width - panel_width - 20, 20,
                              panel_width, len(lines) * line_height + 20)
     pygame.draw.rect(screen, black, panel_rect)
@@ -431,7 +440,7 @@ def draw_progression():
         screen.blit(surface, (panel_rect.x + 10, panel_rect.y + 10 + i * line_height))
 
     if pygame.time.get_ticks() < stage_message_until: # Makes the message disappear after 5000 ms
-        message_surface = inventory_font.render(stage_message, True, white)
+        message_surface = ui_font.render(stage_message, True, white)
         message_rect = message_surface.get_rect(midtop=(screen_width // 2, 20))
         pygame.draw.rect(screen, black, message_rect.inflate(20, 10))
         screen.blit(message_surface, message_rect)
@@ -563,41 +572,32 @@ def build_blocks_in_range(cur_pos_x, cur_pos_y): #cur is for current because pos
     return blocks_in_range
 
 
-def draw_inventory():
-    # A small hotbar in the top-left, always visible, showing what will be placed and how much of it we have.
-    hotbar_x = 20
-    hotbar_y = 20
-    for i, block_type in enumerate([1, 2, 3]):
-        slot_rect = pygame.Rect(hotbar_x + i * (block_size + 10), hotbar_y, block_size, block_size)
+def draw_hotbar():
+    # Centered hotbar at the bottom of the screen.
+    slot_gap = 14
+    hotbar_width = len(placeable_blocks) * block_size + (len(placeable_blocks) - 1) * slot_gap
+    hotbar_x = screen_width // 2 - hotbar_width // 2
+    hotbar_y = screen_height - block_size - 20
+
+    for i, block_type in enumerate(placeable_blocks):
+        slot_rect = pygame.Rect(hotbar_x + i * (block_size + slot_gap), hotbar_y, block_size, block_size)
         pygame.draw.rect(screen, white, slot_rect)
         screen.blit(block_images[block_type], slot_rect)
-        border_color = (255, 0, 0) if block_type == selected_block else black
-        border_width = 3 if block_type == selected_block else 1
-        pygame.draw.rect(screen, border_color, slot_rect, border_width)
-        count_surface = inventory_font.render(str(inventory[block_type]), True, black)
+
+        if block_type == selected_block:
+            # Draw the selected border slightly outside the block so it is easier to see.
+            pygame.draw.rect(screen, (255, 0, 0), slot_rect.inflate(8, 8), 4)
+        else:
+            pygame.draw.rect(screen, black, slot_rect, 1)
+
+        # Show how many of this block have been mined.
+        count_surface = ui_font.render(str(mined_blocks[block_type]), True, black)
         screen.blit(count_surface, (slot_rect.x + 2, slot_rect.bottom - count_surface.get_height()))
-
-    # The bigger panel only appears while the inventory is toggled open with "E".
-    if inventory_open:
-        panel_width = 260
-        panel_height = 50 + len(inventory_display_blocks) * (block_size + 10)
-        panel_rect = pygame.Rect(screen_width // 2 - panel_width // 2, screen_height // 2 - panel_height // 2, panel_width, panel_height)
-        pygame.draw.rect(screen, white, panel_rect)
-        pygame.draw.rect(screen, black, panel_rect, 2)
-
-        title_surface = inventory_font.render("Inventory", True, black)
-        screen.blit(title_surface, (panel_rect.x + 10, panel_rect.y + 10))
-
-        for i, block_type in enumerate(inventory_display_blocks):
-            row_y = panel_rect.y + 50 + i * (block_size + 10)
-            icon_rect = pygame.Rect(panel_rect.x + 10, row_y, block_size, block_size)
-            screen.blit(block_images[block_type], icon_rect)
-            label_surface = inventory_font.render(f"{block_names[block_type]}: {inventory[block_type]}", True, black)
-            screen.blit(label_surface, (icon_rect.right + 10, row_y + block_size // 2 - label_surface.get_height() // 2))
 
 
 on_ground = False
 done = False
+game_start_time = pygame.time.get_ticks() # Gets the time that has already elapsed while the game was starting up.
 while not done:
     screen.fill(white)
 
@@ -618,14 +618,17 @@ while not done:
             done = True
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             done = True  # ESC to quit fullscreen
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
-            inventory_open = not inventory_open  # Toggle the inventory panel open/closed
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
-            selected_block = 1  # Select Grass for placing
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_2:
-            selected_block = 2  # Select Dirt for placing
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_3:
-            selected_block = 3  # Select Stone for placing
+        if event.type == pygame.KEYDOWN:
+            number_keys = [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5,
+                           pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9, pygame.K_0]
+            if event.key in number_keys:
+                hotbar_index = number_keys.index(event.key)
+                if hotbar_index < len(placeable_blocks):
+                    selected_block = placeable_blocks[hotbar_index]
+
+        if event.type == pygame.MOUSEWHEEL:
+            selected_index = placeable_blocks.index(selected_block)
+            selected_block = placeable_blocks[(selected_index - event.y) % len(placeable_blocks)]
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_d]:
@@ -722,9 +725,7 @@ while not done:
                 if blocks_pos[z + rendering_point + rendering_offset][y] == - 0.5:
                     blocks_pos[z + rendering_point + rendering_offset][y] *= -1  # putting it back to the original state 0 = Air
                 if rect_1.colliderect(mouse_following_rect) and not rect_1.colliderect(player_rect):
-                    if inventory.get(selected_block, 0) > 0:                  # Only place if we actually have one in the inventory
-                        blocks_pos[z + rendering_point + rendering_offset][y] = selected_block
-                        inventory[selected_block] -= 1                        # Placing costs one block from the inventory
+                    blocks_pos[z + rendering_point + rendering_offset][y] = selected_block
 
 # Drawing the black rects separately so they appear behind the player.
     for z in range(84):
@@ -790,8 +791,8 @@ while not done:
 
     draw_mining_progress()
 
-    # DRAWING THE INVENTORY (hotbar + optional panel)
-    draw_inventory()
+    # DRAWING THE HOTBAR
+    draw_hotbar()
     draw_progression()
 
     if pos_x > new_render_positive:
