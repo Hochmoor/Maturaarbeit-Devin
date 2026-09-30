@@ -40,9 +40,9 @@ mov_y = 0
 
 # Physics
 gravity = 0.025
-jump_speed = 0.5
-move_acceleration = 0.7
-max_run_speed = 6.0
+jump_speed = 0.26       # Start with a low jump (just over one block).
+move_acceleration = 0.025
+max_run_speed = 0.10    # Movement improves after stages 2, 4 and 6.
 max_fall_speed = 10
 air_drag = 0.92
 ground_friction = 0.80
@@ -288,13 +288,166 @@ offset = 0
 # The inventory keeps track of how many and what kind of blocks the player is carrying.
 # The dictionary keys match the numbers used in blocks_pos.
 inventory = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0} # Inventory can be expanded easily
-block_names = {1: "Grass", 2: "Dirt", 3: "Stone", 4: "Leaf Light", 5: "Leaf Dark", 6: "Wood", 7: "Deep Rock", 8: "Coal", 9: "Copper", 10: "Iron", 11: "Diamond", 12: "Mysticite"}
-block_images = {1: grass_img, 2: dirt_img, 3: stone_img, 9: copper_img, 10: iron_img, 11: diamond_img, 12: mysticite_img}
-inventory_display_blocks = [1, 2, 3, 9, 10, 11, 12]
+block_names = {1: "Grass", 2: "Dirt", 3: "Stone", 4: "Deep Rock", 5: "Magma", 6: "Leaf Light", 7: "Leaf Dark", 8: "Wood", 9: "Copper", 10: "Iron", 11: "Diamond", 12: "Mysticite"}
+block_images = {1: grass_img, 2: dirt_img, 3: stone_img, 4: deep_rock_img, 5: magma_img, 6: leaf_light_img, 7: leaf_dark_img, 8: wood_img, 9: copper_img, 10: iron_img, 11: diamond_img, 12: mysticite_img}
+inventory_display_blocks = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12]
 selected_block = 3      # Block currently selected to place
 inventory_open = False  # Toggled by pressing "E"
 
 inventory_font = pygame.font.SysFont(None, max(18, block_size))
+
+# PROGRESSION
+# The list contains lists with the block number and the required number for the next stage.
+# Resources are kept when a stage is completed and rewards are permanent.
+stage_goals = [[8, 20], [3, 30], [9, 20], [10, 60], [11, 50], [12, 100]]
+completed_stages = 0
+mining_time_multiplier = 1.0
+stage_message = ""
+stage_message_until = 0
+
+# MINING
+# A block must be targeted continuously. Changing blocks or releasing resets it.
+mining_target = None
+mining_started_at = 0
+mining_progress = 0.0
+mining_rect = None
+
+
+def get_mining_time(block_type): # Function to get the mining time of a given block type.
+    # Times are in milliseconds because pygame.time.get_ticks() uses them.
+    if block_type in (4, 9, 10, 11, 12):  # Deep rock and every ore because they should be harder to break.
+        base_time = 3200 # = 3.2s
+    else:
+        base_time = 1600 # = 1.6s
+    return base_time * mining_time_multiplier # Time multiplier changes as stages are completed.
+
+
+def update_progression(): # Checks once per frame if a new stage is unlocked.
+    # Makes a few variables global to assign new values to them.
+    global completed_stages, mining_time_multiplier, move_acceleration, max_run_speed, jump_speed, stage_message, stage_message_until
+
+    # The loop also handles resources collected before their stage begins.
+    while completed_stages < len(stage_goals): # Checking whether stages remain.
+        goal_block, goal_amount = stage_goals[completed_stages] # Gets the goal block (Iron) and the amount to finish the stage (60).
+        if inventory[goal_block] < goal_amount: # Checks if the current amount of the
+            break # leaves the while loop, because there is nothing after it the function finishes.
+
+        completed_stages += 1 # If it doesn't break this means the next stage is completed so completed stages += 1
+        if completed_stages == 6:
+            mining_time_multiplier = 0.0  # 0.0 for instant mining
+            reward = "Instant mining + faster movement + higher jumps!"
+        else:
+            mining_time_multiplier /= 2
+            reward = "Mining time halved!"
+            if completed_stages in (2, 4): # For stages 2 and 4 the following text is added to "Mining time is halved"
+                reward += " Faster movement + higher jumps!"
+
+        if completed_stages == 2: # Movement update for stage 2
+            move_acceleration = 0.05
+            max_run_speed = 0.20
+            jump_speed = 0.34
+        elif completed_stages == 4: # Movement update for stage 4
+            move_acceleration = 0.075
+            max_run_speed = 0.30
+            jump_speed = 0.42
+        elif completed_stages == 6: # Movement update for stage 6
+            move_acceleration = 0.10
+            max_run_speed = 0.40
+            jump_speed = 0.50
+
+        stage_message = f"Stage {completed_stages} complete: {reward}"
+        stage_message_until = pygame.time.get_ticks() + 5000 # Adds 5s to the time since pygame is running so the message can be turned of after those 5 seconds.
+
+def update_mining(left_mouse_pressed, mouse_x, mouse_y): #Inputs: Is mouse pressed?, position of mouse.
+    # Making some variables global allows the function to assign new values to these existing variables
+    global mining_target, mining_started_at, mining_progress, mining_rect #Block being mined, when the mining started, value between 0 and 1 for progress, the rectangle for the progress bar.
+
+    target = None
+    mining_rect = None
+    if left_mouse_pressed and not inventory_open:
+        # finding a 7x7 box around the player and turning them into rectangles to collide.
+        for a in range(7):
+            for b in range(7):
+                x = 38 + rendering_offset + rendering_point + a
+                y = -math.ceil(pos_y - 15) + b
+                block_type = blocks_pos[x][y]
+                if block_type in (0, 0.5, 5):  # Air, cave air and unmineable magma are excluded because they can't be mined.
+                    continue # Skip because they can't be mined
+
+                rect = pygame.Rect((x - rendering_offset - pos_x) * block_size - block_size * 10,
+                                   screen_height - block_size - y * block_size - pos_y * block_size,
+                                   block_size, block_size) # Making the minable blocks rects so collidepoint works.
+                if rect.collidepoint(mouse_x, mouse_y): # Checking if the mouse is on the rect.
+                    # Subtract the rendering_offset so generating columns to the left does not make the same world block look like a new target.
+                    target = (x - rendering_offset, y, block_type)
+                    mining_rect = rect
+
+    if target is None:
+        mining_target = None # Clears the remembered target
+        mining_progress = 0.0 # progress is reset
+        return # ends the function
+
+    now = pygame.time.get_ticks() # How many Milliseconds the game has been running for
+    if target != mining_target: # This will happen if you begin mining or switch to another block.
+        mining_target = target
+        mining_started_at = now
+        mining_progress = 0.0 # progress is set to 0 as you have just begun mining.
+
+    world_x, y, block_type = target # This unpacks the target’s three values into separate variables.
+    mining_time = get_mining_time(block_type) # Find out how long a block takes to mine
+    if mining_time == 0: # Sets it to 1.0 = 100% instantly, avoids division by 0
+        mining_progress = 1.0
+    else:
+        mining_progress = min(1.0, (now - mining_started_at) / mining_time) # Calculate the percentage
+
+    if mining_progress >= 1.0:
+        x = world_x + rendering_offset # converts the stable world column back into its current list index.
+        inventory[block_type] += 1
+        if blocks_pos_height[x] <= y: # blocks_pos_height[x] stores the terrain’s surface height in this column.
+            blocks_pos[x][y] = 0  # Air above the surface
+        else:
+            blocks_pos[x][y] = 0.5  # Black cave air below the surface
+        mining_target = None # Setting everything to 0 or None again because the block is now mined.
+        mining_progress = 0.0
+        mining_rect = None
+
+
+def draw_progression():
+    if completed_stages < len(stage_goals):
+        goal_block, goal_amount = stage_goals[completed_stages]
+        lines = [f"Stage {completed_stages + 1} / 6",
+                 f"Collect {goal_amount} {block_names[goal_block]}",
+                 f"Progress: {inventory[goal_block]} / {goal_amount}"]
+    else:
+        lines = ["All 6 stages complete!", "Instant mining unlocked"]
+
+    text_surfaces = [inventory_font.render(line, True, white) for line in lines]
+    panel_width = max(surface.get_width() for surface in text_surfaces) + 20
+    line_height = inventory_font.get_linesize()
+    panel_rect = pygame.Rect(screen_width - panel_width - 20, 20,
+                             panel_width, len(lines) * line_height + 20)
+    pygame.draw.rect(screen, black, panel_rect)
+    for i, surface in enumerate(text_surfaces):
+        screen.blit(surface, (panel_rect.x + 10, panel_rect.y + 10 + i * line_height))
+
+    if pygame.time.get_ticks() < stage_message_until: # Makes the message disappear after 5000 ms
+        message_surface = inventory_font.render(stage_message, True, white)
+        message_rect = message_surface.get_rect(midtop=(screen_width // 2, 20))
+        pygame.draw.rect(screen, black, message_rect.inflate(20, 10))
+        screen.blit(message_surface, message_rect)
+
+
+def draw_mining_progress():
+    if mining_rect is not None: # If mining is happening
+        # Draw on top of the block, after its texture has been drawn.
+        bar_height = max(5, block_size // 5)
+        bar_rect = pygame.Rect(mining_rect.x, mining_rect.bottom - 0.5 * block_size - 0.5 * bar_height,
+                               block_size, bar_height)
+        pygame.draw.rect(screen, black, bar_rect)
+        fill_rect = pygame.Rect(bar_rect.x, bar_rect.y,
+                                int(bar_rect.width * mining_progress), bar_rect.height)
+        pygame.draw.rect(screen, (70, 220, 90), fill_rect)
+        pygame.draw.rect(screen, white, bar_rect, 1)
 
 # Creating blocks_pos and blocks_pos height to keep track of the terrain height.
 blocks_pos = [[0 for _ in range(world_height)] for _ in range(84)]
@@ -476,9 +629,9 @@ while not done:
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_d]:
-        mov_x += 0.1
+        mov_x += move_acceleration
     if keys[pygame.K_a]:
-        mov_x -= 0.1
+        mov_x -= move_acceleration
     if keys[pygame.K_w]:
         if on_ground:
             mov_y = mov_y - jump_speed
@@ -543,34 +696,8 @@ while not done:
 
     mouse_following_rect = pygame.Rect(mouse_x, mouse_y, 1, 1)
 
-    #Checking 7x7 blocks around player
-    if left_mouse_pressed:
-        for a in range(7):
-            for b in range(7):
-                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] != 0 and blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] != 0.5 and blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] != 5:
-                    blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] *= -1 # making the blocks in range negative for it to be detected later.
-
-    blocks_in_range_mouse = [] # Emptying the list
-    for z in range(84):
-        for y in range(world_height):
-            if blocks_pos[z + rendering_point + rendering_offset][y] < 0: # Finding the blocks made negative by the 7x7 Box
-                # Create the Rect object: (x, y, width, height)
-                rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), block_size, block_size)
-                blocks_in_range_mouse.append(rect_1)
-                blocks_pos[z + rendering_point + rendering_offset][y] *= -1  # putting it back to the original state so the Block gets displayed with the right texture once the player moves away from it
-                if rect_1.colliderect(mouse_following_rect):
-                    mined_block_type = blocks_pos[z + rendering_point + rendering_offset][y]  # Remember which block we're about to remove
-                    inventory[mined_block_type] = inventory.get(mined_block_type, 0) + 1       # Add one of that block to the inventory
-
-                    if blocks_pos_height[z + rendering_point + rendering_offset] <= y:
-                        blocks_pos[z + rendering_point + rendering_offset][
-                            y] = 0  # putting it back to the original state 0 = Air
-
-                    else:
-                        blocks_pos[z + rendering_point + rendering_offset][y] = 0.5
-                        print("happened")
-
-
+    update_mining(left_mouse_pressed, mouse_x, mouse_y)
+    update_progression()
 
     #Checking 7x7 blocks around player
     if right_mouse_pressed:
@@ -661,8 +788,11 @@ while not done:
     black_rect = pygame.Rect(0, screen_height - (pos_y * block_size), screen_width, screen_height//2)
     pygame.draw.rect(screen, black, black_rect)
 
+    draw_mining_progress()
+
     # DRAWING THE INVENTORY (hotbar + optional panel)
     draw_inventory()
+    draw_progression()
 
     if pos_x > new_render_positive:
         new_render_positive += 1
