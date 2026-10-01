@@ -40,7 +40,6 @@ player_rect_top_original = player_rect.top
 pos_x = 0
 pos_y = -60
 last_frame_pos_x = pos_x
-last_frame_pos_y = pos_y
 mov_x = 0
 mov_y = 0
 
@@ -50,10 +49,9 @@ jump_speed = 0.26       # Start with a low jump (just over one block).
 move_acceleration = 0.025
 max_run_speed = 0.10    # Movement improves after stages 2, 4 and 6.
 max_fall_speed = 1
-air_drag = 0.92
 ground_friction = 0.80
 
-blocks_pos_blocks_in_range = []
+
 
 #Background Texture
 background_img = pygame.image.load("background_2.png").convert_alpha()
@@ -74,53 +72,28 @@ slime_frames = [
 
 # Block Textures
 stone_img = pygame.image.load("stone 3.png").convert_alpha()
-stone_dark_img = stone_img.copy()
-stone_dark_img.fill((0, 0, 0), special_flags=pygame.BLEND_RGB_MULT)
 stone_img = pygame.transform.scale(stone_img, (block_size, block_size))
-stone_dark_img = pygame.transform.scale(stone_dark_img, (block_size, block_size))
 
 grass_img = pygame.image.load("grass.png").convert_alpha()
-grass_dark_img = grass_img.copy()
 grass_img = pygame.transform.scale(grass_img, (block_size, block_size))
-grass_dark_img = pygame.transform.scale(grass_dark_img, (block_size, block_size))
-
 
 dirt_img = pygame.image.load("dirt.png").convert_alpha()
-dirt_dark_img = dirt_img.copy()
-dirt_dark_img.fill((50, 50, 50), special_flags=pygame.BLEND_RGB_MULT)
 dirt_img = pygame.transform.scale(dirt_img, (block_size, block_size))
-dirt_dark_img = pygame.transform.scale(dirt_dark_img, (block_size, block_size))
 
 deep_rock_img = pygame.image.load("deep rock 4.png").convert_alpha()
-deep_rock_dark_img = deep_rock_img.copy()
-deep_rock_dark_img.fill((50, 50, 50), special_flags=pygame.BLEND_RGB_MULT)
 deep_rock_img = pygame.transform.scale(deep_rock_img, (block_size, block_size))
-deep_rock_dark_img = pygame.transform.scale(deep_rock_dark_img, (block_size, block_size))
 
 magma_img = pygame.image.load("magma3.png").convert_alpha()
-magma_dark_img = magma_img.copy()
-magma_dark_img.fill((200, 200, 200), special_flags=pygame.BLEND_RGB_MULT)
 magma_img = pygame.transform.scale(magma_img, (block_size, block_size))
-magma_dark_img = pygame.transform.scale(magma_dark_img, (block_size, block_size))
 
 leaf_light_img = pygame.image.load("leaf_light.png").convert_alpha()
-leaf_light_dark_img = leaf_light_img.copy()
 leaf_light_img = pygame.transform.scale(leaf_light_img, (block_size, block_size))
-leaf_light_dark_img = pygame.transform.scale(leaf_light_dark_img, (block_size, block_size))
 
 leaf_dark_img = pygame.image.load("leaf_dark.png").convert_alpha()
-leaf_dark_dark_img = leaf_dark_img.copy()
 leaf_dark_img = pygame.transform.scale(leaf_dark_img, (block_size, block_size))
-leaf_dark_dark_img = pygame.transform.scale(leaf_dark_dark_img, (block_size, block_size))
 
 wood_img = pygame.image.load("wood.png").convert_alpha()
-wood_dark_img = wood_img.copy()
-wood_dark_img.fill((200, 200, 200), special_flags=pygame.BLEND_RGB_MULT)
 wood_img = pygame.transform.scale(wood_img, (block_size, block_size))
-wood_dark_img = pygame.transform.scale(wood_dark_img, (block_size, block_size))
-
-slime_img = pygame.image.load("slime.png").convert_alpha()
-slime_img = pygame.transform.scale(slime_img, (block_size, block_size))
 
 copper_img = pygame.image.load("copper 3.png").convert_alpha()
 copper_img = pygame.transform.scale(copper_img, (block_size, block_size))
@@ -160,7 +133,6 @@ next_tree_negative = random.randint(2,5)
 white = (255, 255, 255)
 black = (0, 0, 0)
 
-speed = 60
 
 new_render_positive = 0 # This point keeps track of where the Player has been and if there needs to be a new render when player goes into unrendered territory.
 new_render_negative = 0 # This point keeps track of where the Player has been and if there needs to be a new render when player goes into unrendered territory.
@@ -170,9 +142,9 @@ rendering_offset = 0 # This variable keeps track of the offset which builds up a
 #Cave Generation
 max_diggers = 2
 min_diggers = 1
-starting_diggers = random.randint(min_diggers, max_diggers) # For the biases we don't want the same => Separate
-diggers_positive_pos =  [[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)]]
-diggers_negative_pos =  [[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)]]
+starting_diggers = random.randint(min_diggers, max_diggers) # For the biases we don't want the same => Separate diggers
+diggers_positive_pos =  [[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)]]
+diggers_negative_pos =  [[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)]]
 
 for i in range(starting_diggers): # For the starting pos we want to have the same => Together
     diggers_positive_pos[i][0] = diggers_negative_pos[i][0] = random.randint(4,60)
@@ -284,15 +256,12 @@ def generate_ores_for_column(x):
     try_generate_ore_vein(x, 12, 4, 0.015) # Mysticite
 
 
-# --- Pygame Setup ---
-pygame.init()
-screen = pygame.display.set_mode((screen_width, screen_height))
+# --- Clock Setup ---
 clock = pygame.time.Clock()
-offset = 0
 
 # HOTBAR / MINED BLOCK COUNTS
 # mined_blocks keeps track of how many blocks the player has available and is also used for progression.
-mined_blocks = {1: 100, 2: 100, 3: 100, 4: 100, 5: 100, 6: 100, 7: 100, 8: 100, 9: 100, 10: 100, 11: 100, 12: 100}
+mined_blocks = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0}
 block_names = {1: "Grass", 2: "Dirt", 3: "Stone", 4: "Deep Rock", 5: "Magma", 6: "Leaf Light", 7: "Leaf Dark", 8: "Wood", 9: "Copper", 10: "Iron", 11: "Diamond", 12: "Mysticite"}
 block_images = {1: grass_img, 2: dirt_img, 3: stone_img, 4: deep_rock_img, 5: magma_img, 6: leaf_light_img, 7: leaf_dark_img, 8: wood_img, 9: copper_img, 10: iron_img, 11: diamond_img, 12: mysticite_img}
 placeable_blocks = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12]  # Every block except unmineable magma
@@ -722,13 +691,11 @@ while not done:
                 if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0.5:
                     blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] *= -1
 
-    blocks_in_range_mouse = [] # Emptying the list
     for z in range(84):
         for y in range(world_height):
             if blocks_pos[z + rendering_point + rendering_offset][y] < 0: # Finding the blocks made negative by the 7x7 Box
                 # Create the Rect object: (x, y, width, height)
                 rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), block_size, block_size)
-                blocks_in_range_mouse.append(rect_1)
                 if blocks_pos[z + rendering_point + rendering_offset][y] == -1:
                     blocks_pos[z + rendering_point + rendering_offset][y] = 0
                 if blocks_pos[z + rendering_point + rendering_offset][y] == - 0.5:
@@ -808,9 +775,9 @@ while not done:
 
     if pos_x > new_render_positive:
         new_render_positive += 1
-        x_octave1 = (42 + new_render_positive) / scale_octave1
-        x_octave2 = (42 + new_render_positive) / scale_octave2
-        x_octave3 = (42 + new_render_positive) / scale_octave3
+        x_octave1 = (41 + new_render_positive) / scale_octave1
+        x_octave2 = (41 + new_render_positive) / scale_octave2
+        x_octave3 = (41 + new_render_positive) / scale_octave3
         noise_value = round(get_noise_octave1(x_octave1) * amplitude_octave1) + round(get_noise_octave2(x_octave2) * amplitude_octave2)
         if noise_value > 10:
             noise_value += round(get_noise_octave3(x_octave3) * amplitude_octave3)
@@ -876,9 +843,9 @@ while not done:
         if one_percent == 99: # Take another number for 1% chance to change tree type mode.
             tree_type_mode = random.randint(1, 2)
         if next_tree == 0:
-            x_octave1 = (42 - 3 + new_render_positive) / scale_octave1
-            x_octave2 = (42 - 3 + new_render_positive) / scale_octave2
-            x_octave3 = (42 - 3 + new_render_positive) / scale_octave3
+            x_octave1 = (38 + new_render_positive) / scale_octave1
+            x_octave2 = (38 + new_render_positive) / scale_octave2
+            x_octave3 = (38 + new_render_positive) / scale_octave3
             noise_value = round(get_noise_octave1(x_octave1) * amplitude_octave1) + round(
                 get_noise_octave2(x_octave2) * amplitude_octave2)
             if noise_value > 10:
@@ -1008,7 +975,6 @@ while not done:
 
 
     last_frame_pos_x = pos_x
-    last_frame_pos_y = pos_y
     pygame.display.flip()
-    clock.tick(speed)
+    clock.tick(FPS)
 pygame.quit()
