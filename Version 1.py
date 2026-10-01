@@ -289,7 +289,7 @@ offset = 0
 
 # HOTBAR / MINED BLOCK COUNTS
 # mined_blocks keeps track of how many blocks the player has available and is also used for progression.
-mined_blocks = {1: 100, 2: 100, 3: 100, 4: 100, 5: 100, 6: 100, 7: 100, 8: 100, 9: 100, 10: 100, 11: 100, 12: 100}
+mined_blocks = {1: 100, 2: 100, 3: 0, 4: 100, 5: 100, 6: 100, 7: 100, 8: 100, 9: 100, 10: 100, 11: 100, 12: 100}
 block_names = {1: "Grass", 2: "Dirt", 3: "Stone", 4: "Deep Rock", 5: "Magma", 6: "Leaf Light", 7: "Leaf Dark", 8: "Wood", 9: "Copper", 10: "Iron", 11: "Diamond", 12: "Mysticite"}
 block_images = {1: grass_img, 2: dirt_img, 3: stone_img, 4: deep_rock_img, 5: magma_img, 6: leaf_light_img, 7: leaf_dark_img, 8: wood_img, 9: copper_img, 10: iron_img, 11: diamond_img, 12: mysticite_img}
 placeable_blocks = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12]  # Every block except unmineable magma
@@ -649,7 +649,6 @@ while not done:
     if keys[pygame.K_w] or keys[pygame.K_SPACE]:
         if on_ground and pos_y >= -75: # Stops the player from jumping above a certain height to prevent him from going upwards infinitely. (And from crashing the Game.)
             mov_y = mov_y - jump_speed
-    print(pos_x, pos_y)
     # Gravity
     mov_y += gravity
     if mov_y > max_fall_speed:
@@ -715,30 +714,19 @@ while not done:
 
     #Checking 7x7 blocks around player
     if right_mouse_pressed:
-        print("right_mouse_pressed")
         for a in range(7):
             for b in range(7):
-                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0:
-                    blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] -= 1
+                x = 38 + rendering_offset + rendering_point + a
+                y = -math.ceil(pos_y - 15) + b
 
-                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0.5:
-                    blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] *= -1
-
-    blocks_in_range_mouse = [] # Emptying the list
-    for z in range(84):
-        for y in range(world_height):
-            if blocks_pos[z + rendering_point + rendering_offset][y] < 0: # Finding the blocks made negative by the 7x7 Box
-                # Create the Rect object: (x, y, width, height)
-                rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), block_size, block_size)
-                blocks_in_range_mouse.append(rect_1)
-                if blocks_pos[z + rendering_point + rendering_offset][y] == -1:
-                    blocks_pos[z + rendering_point + rendering_offset][y] = 0
-                if blocks_pos[z + rendering_point + rendering_offset][y] == - 0.5:
-                    blocks_pos[z + rendering_point + rendering_offset][y] *= -1  # putting it back to the original state 0 = Air
-                if rect_1.colliderect(mouse_following_rect) and not rect_1.colliderect(player_rect):
-                    if mined_blocks[selected_block] > 0:
-                        blocks_pos[z + rendering_point + rendering_offset][y] = selected_block
-                        mined_blocks[selected_block] -= 1
+                if blocks_pos[x][y] in (0, 0.5):
+                    rect_1 = pygame.Rect((a + 38 - pos_x) * block_size - block_size * 10,
+                                         screen_height - block_size - y * block_size - (pos_y * block_size),
+                                         block_size, block_size)
+                    if rect_1.colliderect(mouse_following_rect) and not rect_1.colliderect(player_rect):
+                        if mined_blocks[selected_block] > 0:
+                            blocks_pos[x][y] = selected_block
+                            mined_blocks[selected_block] -= 1
 
 # Drawing the black rects separately so they appear behind the player.
     for z in range(84):
