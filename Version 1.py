@@ -135,7 +135,7 @@ tree = [[0,0,6,6,7,0],
         [0,0,6,7,7,6],
         [0,0,7,6,7,0]]
 
-tree = [[0,0,7,0,0,0,0,0],
+tree_2 = [[0,0,7,0,0,0,0,0],
         [0,0,7,7,0,7,0,0],
         [8,8,8,8,8,7,7,7],
         [0,0,7,7,0,7,0,0],
@@ -143,6 +143,9 @@ tree = [[0,0,7,0,0,0,0,0],
 
 tree_density_mode = random.randint(1,3)
 tree_density_mode_negative = random.randint(1,3)
+
+tree_type_mode = random.randint(1,2)
+tree_type_mode_negative = random.randint(1,2)
 
 next_tree = random.randint(2,5)
 next_tree_negative = random.randint(2,5)
@@ -286,7 +289,7 @@ offset = 0
 
 # HOTBAR / MINED BLOCK COUNTS
 # mined_blocks keeps track of how many blocks the player has available and is also used for progression.
-mined_blocks = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0}
+mined_blocks = {1: 100, 2: 100, 3: 100, 4: 100, 5: 100, 6: 100, 7: 100, 8: 100, 9: 100, 10: 100, 11: 100, 12: 100}
 block_names = {1: "Grass", 2: "Dirt", 3: "Stone", 4: "Deep Rock", 5: "Magma", 6: "Leaf Light", 7: "Leaf Dark", 8: "Wood", 9: "Copper", 10: "Iron", 11: "Diamond", 12: "Mysticite"}
 block_images = {1: grass_img, 2: dirt_img, 3: stone_img, 4: deep_rock_img, 5: magma_img, 6: leaf_light_img, 7: leaf_dark_img, 8: wood_img, 9: copper_img, 10: iron_img, 11: diamond_img, 12: mysticite_img}
 placeable_blocks = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12]  # Every block except unmineable magma
@@ -542,10 +545,18 @@ for z in range(74): # 74 because blocks pos is 84 rows long and I want 5 blocks 
             noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
         ground_height = noise_value
         print("noise value",noise_value)
-        for a in range(len(tree)):
-            for b in range(len(tree[a])):
-                if blocks_pos[a + z][b + ground_height + 40] == 0 or blocks_pos[a + z][b + ground_height + 40] == 1:
-                    blocks_pos[a + z][b + ground_height + 40] = tree[a][b]
+
+        if tree_type_mode == 1:
+            for a in range(len(tree)):
+                for b in range(len(tree[a])):
+                    if blocks_pos[a + z][b + ground_height + 40] == 0 or blocks_pos[a + z][b + ground_height + 40] == 1:
+                        blocks_pos[a + z][b + ground_height + 40] = tree[a][b]
+
+        if tree_type_mode == 2:
+            for a in range(len(tree_2)):
+                for b in range(len(tree_2[a])):
+                    if blocks_pos[a + z][b + ground_height + 40] == 0 or blocks_pos[a + z][b + ground_height + 40] == 1:
+                        blocks_pos[a + z][b + ground_height + 40] = tree_2[a][b]
 
         if tree_density_mode == 1:
             next_tree = random.randint(16, 40)
@@ -867,6 +878,8 @@ while not done:
         one_percent = random.randint(1, 100)
         if one_percent == 100:
             tree_density_mode = random.randint(1, 3)
+        if one_percent == 99: # Take another number for 1% chance to change tree type mode.
+            tree_type_mode = random.randint(1, 2)
         if next_tree == 0:
             x_octave1 = (42 - 3 + new_render_positive) / scale_octave1
             x_octave2 = (42 - 3 + new_render_positive) / scale_octave2
@@ -879,10 +892,17 @@ while not done:
                 noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
             ground_height = noise_value
             print("noise value", noise_value)
-            for a in range(len(tree)):
-                for b in range(len(tree[a])):
-                    if blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] == 0 or blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] == 1:
-                        blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] = tree[a][b]
+            if tree_type_mode == 1:
+                for a in range(len(tree)):
+                    for b in range(len(tree[a])):
+                        if blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] == 0 or blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] == 1:
+                            blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] = tree[a][b]
+
+            if tree_type_mode == 2:
+                for a in range(len(tree_2)):
+                    for b in range(len(tree_2[a])):
+                        if blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] == 0 or blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] == 1:
+                            blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] = tree_2[a][b]
 
             if tree_density_mode == 1:
                 next_tree = random.randint(16, 40)
@@ -961,14 +981,24 @@ while not done:
         one_percent = random.randint(1, 100)
         if one_percent == 100:
             tree_density_mode_negative = random.randint(1, 3)
+        if one_percent == 99:
+            tree_type_mode_negative = random.randint(1, 2)
+
         if next_tree_negative == 0:
 
             ground_height = blocks_pos_height[5]
 
-            for a in range(len(tree)):
-                for b in range(len(tree[a])):
-                    if blocks_pos[a + 3][b + ground_height] == 0 or blocks_pos[a + 3][b + ground_height] == 1:
-                        blocks_pos[a + 3][b + ground_height] = tree[a][b]
+            if tree_type_mode_negative == 1:
+                for a in range(len(tree)):
+                    for b in range(len(tree[a])):
+                        if blocks_pos[a + 3][b + ground_height] == 0 or blocks_pos[a + 3][b + ground_height] == 1:
+                            blocks_pos[a + 3][b + ground_height] = tree[a][b]
+
+            if tree_type_mode_negative == 2:
+                for a in range(len(tree_2)):
+                    for b in range(len(tree_2[a])):
+                        if blocks_pos[a + 3][b + ground_height] == 0 or blocks_pos[a + 3][b + ground_height] == 1:
+                            blocks_pos[a + 3][b + ground_height] = tree_2[a][b]
 
             if tree_density_mode_negative == 1:
                 next_tree_negative = random.randint(16, 40)
