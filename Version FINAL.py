@@ -14,36 +14,35 @@ else:
 screen_width, screen_height = screen.get_size()
 block_size = screen_height // 36
 
-# --- Configuration ---
+# Frames per second
 FPS = 60
 
+# Terrain Generation Settings
 scale_octave1 = 100
 amplitude_octave1 = 15
 scale_octave2 = 10
 amplitude_octave2 = 5
 scale_octave3 = 3
 amplitude_octave3 = 3
+world_height = 104
 
-# seed values
+# seed values of different lengths so if they start over again not at the same time resulting in not the same terrain.
 seed_values_octave_1 = [random.uniform(-1, 1) for _ in range(100)]
 seed_values_octave_2 = [random.uniform(-1, 1) for _ in range(99)]
 seed_values_octave_3 = [random.uniform(-1, 1) for _ in range(98)]
 
-world_height = 104
-
 # Player settings
 player_size = block_size
-player_rect = pygame.Rect(screen_width//2 - 0.5 * player_size, screen_height//2 - 0.5 * player_size, player_size, player_size)
+player_rect = pygame.Rect(screen_width//2 - 0.5 * player_size, screen_height//2 - 0.5 * player_size, player_size, player_size) # puts the player exactly in the Middle of the Screen.
 player_rect_right_original = player_rect.right
 player_rect_top_original = player_rect.top
 
+# Physics
 pos_x = 0
 pos_y = -60
 last_frame_pos_x = pos_x
 mov_x = 0
 mov_y = 0
-
-# Physics
 gravity = 0.025
 jump_speed = 0.26       # Start with a low jump (just over one block).
 move_acceleration = 0.025
@@ -51,9 +50,8 @@ max_run_speed = 0.10    # Movement improves after stages 2, 4 and 6.
 max_fall_speed = 1
 ground_friction = 0.80
 
-
-
-#Background Texture
+# TEXTURES
+# Background Texture
 background_img = pygame.image.load("background_2.png").convert_alpha()
 background_img = pygame.transform.scale(background_img, (screen_width,screen_height))
 background_x = pos_x
@@ -67,8 +65,6 @@ slime_frames = [
     pygame.transform.scale(pygame.image.load("slime 4.png").convert_alpha(), (block_size, block_size)),
     pygame.transform.scale(pygame.image.load("slime 5.png").convert_alpha(), (block_size, block_size)),
 ]
-
-
 
 # Block Textures
 stone_img = pygame.image.load("stone 3.png").convert_alpha()
@@ -107,7 +103,7 @@ diamond_img = pygame.transform.scale(diamond_img, (block_size, block_size))
 mysticite_img = pygame.image.load("mysticite.png").convert_alpha()
 mysticite_img = pygame.transform.scale(mysticite_img, (block_size, block_size))
 
-#Structures
+# TREES
 tree = [[0,0,6,6,7,0],
         [0,0,7,7,6,6],
         [8,8,7,6,6,7],
@@ -129,24 +125,27 @@ tree_type_mode_negative = random.randint(1,2)
 next_tree = random.randint(2,5)
 next_tree_negative = random.randint(2,5)
 
-
+# Colours
 white = (255, 255, 255)
 black = (0, 0, 0)
 
+# Clock
+clock = pygame.time.Clock()
 
+# World Generation
 new_render_positive = 0 # This point keeps track of where the Player has been and if there needs to be a new render when player goes into unrendered territory.
 new_render_negative = 0 # This point keeps track of where the Player has been and if there needs to be a new render when player goes into unrendered territory.
 rendering_point = 0 # This is a rounded Version of the X coordinate to decide together with renderin_offset which part of the blocks_pos list to use.
 rendering_offset = 0 # This variable keeps track of the offset which builds up as the player explores into negative pos_x territory and new renders are added in the beginning of the list.
 
-#Cave Generation
+# Cave Generation
 max_diggers = 2
 min_diggers = 1
-starting_diggers = random.randint(min_diggers, max_diggers) # For the biases we don't want the same => Separate diggers
-diggers_positive_pos =  [[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)]]
+starting_diggers = random.randint(min_diggers, max_diggers) # For the biases we don't want the same -> Separate diggers
+diggers_positive_pos =  [[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)]] # The digger when not used is "parked" at height 1000
 diggers_negative_pos =  [[1000,0,random.randint(5,59)],[1000,0,random.randint(5,59)]]
 
-for i in range(starting_diggers): # For the starting pos we want to have the same => Together
+for i in range(starting_diggers): # For the starting pos we want positive and negative to be the same so caves connect.
     diggers_positive_pos[i][0] = diggers_negative_pos[i][0] = random.randint(4,60)
 
 
@@ -256,8 +255,6 @@ def generate_ores_for_column(x):
     try_generate_ore_vein(x, 12, 4, 0.015) # Mysticite
 
 
-# --- Clock Setup ---
-clock = pygame.time.Clock()
 
 # HOTBAR / MINED BLOCK COUNTS
 # mined_blocks keeps track of how many blocks the player has available and is also used for progression.
@@ -265,7 +262,7 @@ mined_blocks = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11:
 block_names = {1: "Grass", 2: "Dirt", 3: "Stone", 4: "Deep Rock", 5: "Magma", 6: "Leaf Light", 7: "Leaf Dark", 8: "Wood", 9: "Copper", 10: "Iron", 11: "Diamond", 12: "Mysticite"}
 block_images = {1: grass_img, 2: dirt_img, 3: stone_img, 4: deep_rock_img, 5: magma_img, 6: leaf_light_img, 7: leaf_dark_img, 8: wood_img, 9: copper_img, 10: iron_img, 11: diamond_img, 12: mysticite_img}
 placeable_blocks = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12]  # Every block except unmineable magma
-selected_block = 3
+selected_block = 3 # The block that is outlined in the hotbar when the game is started.
 
 ui_font = pygame.font.SysFont(None, max(18, block_size))
 
@@ -331,7 +328,7 @@ def update_progression(): # Checks once per frame if a new stage is unlocked.
             jump_speed = 0.50
 
         stage_message = f"Stage {completed_stages} complete: {reward}"
-        stage_message_until = pygame.time.get_ticks() + 5000 # Adds 5s to the time since pygame is running so the message can be turned of after those 5 seconds.
+        stage_message_until = pygame.time.get_ticks() + 5000 # Adds 5s to the time since pygame is running so the message can be turned off after those 5 seconds.
 
 def update_mining(left_mouse_pressed, mouse_x, mouse_y): #Inputs: Is mouse pressed?, position of mouse.
     # Making some variables global allows the function to assign new values to these existing variables
@@ -437,7 +434,7 @@ def draw_mining_progress():
 blocks_pos = [[0 for _ in range(world_height)] for _ in range(84)]
 blocks_pos_height = []
 
-
+# Initial 84 blocks generation
 for z in range(84):
     x_octave1 = (z - 42) / scale_octave1
     x_octave2 = (z - 42) / scale_octave2
@@ -455,6 +452,7 @@ for z in range(84):
     for i in range(22 + noise_value - 2):
         blocks_pos[z][i + 18] = 3
 
+    # Creating a smooth transition between rock and deep rock.
     blocks_pos[z][12] = random.choices([3, 4], [5, 95])[0]
     blocks_pos[z][13] = random.choices([3, 4], [20, 80])[0]
     blocks_pos[z][14] = random.choices([3, 4], [40, 60])[0]
@@ -465,11 +463,12 @@ for z in range(84):
     for i in range(9):
         blocks_pos[z][i + 3] = 4
 
+    # Creating a smooth transition between deep rock and unbreakable magma.
     blocks_pos[z][2] = random.choices([4, 5], [85, 15])[0]
     blocks_pos[z][1] = random.choices([4, 5], [30, 70])[0]
     blocks_pos[z][0] = 5
 
-
+# Initial 84 blocks cave generation
 for z in range(84):
     for y in range (len(diggers_positive_pos)):
         if diggers_positive_pos[y][0] <= 64:
@@ -501,7 +500,7 @@ for z in range(84):
     generate_ores_for_column(z)
 
 # Drawing Trees
-for z in range(74): # 74 because blocks pos is 84 rows long and I want 5 blocks of clearance on each side
+for z in range(74): # 74 because blocks pos is 84 rows long and there should be 5 blocks of clearance on each side
     z += 5
     next_tree -= 1
     if next_tree == 0:
@@ -534,7 +533,7 @@ for z in range(74): # 74 because blocks pos is 84 rows long and I want 5 blocks 
         if tree_density_mode == 3:
             next_tree = random.randint(4, 8)
 
-def build_blocks_in_range(cur_pos_x, cur_pos_y): #cur is for current because pos_y is not updated yet when the function runs for the first time.
+def build_blocks_in_range(cur_pos_x, cur_pos_y): # cur is for current because pos_y is not updated yet when the function runs for the first time.
 # This function allows the pos_x and pos_y to be updated individually to make collision checking work.
     blocks_in_range = []
     for a in range(3):  # This creates a 3x3 box around the player where collision will be checked
@@ -574,7 +573,7 @@ def draw_hotbar():
         count_surface = ui_font.render(str(mined_blocks[block_type]), True, black)
         screen.blit(count_surface, (slot_rect.x + 2, slot_rect.bottom - count_surface.get_height()))
 
-
+# MAIN WHILE LOOP
 on_ground = False
 done = False
 game_start_time = pygame.time.get_ticks() # Gets the time that has already elapsed while the game was starting up.
@@ -618,12 +617,12 @@ while not done:
     if keys[pygame.K_w] or keys[pygame.K_SPACE]:
         if on_ground and pos_y >= -75: # Stops the player from jumping above a certain height to prevent him from going upwards infinitely. (And from crashing the Game.)
             mov_y = mov_y - jump_speed
-    # Gravity
+    # Gravity and max fall speed
     mov_y += gravity
     if mov_y > max_fall_speed:
         mov_y = max_fall_speed
 
-    # Clamp horizontal speed
+    # Limit horizontal speed
     if mov_x > max_run_speed:
         mov_x = max_run_speed
     elif mov_x < -max_run_speed:
@@ -676,12 +675,14 @@ while not done:
     left_mouse_pressed = pygame.mouse.get_pressed()[0]
     right_mouse_pressed = pygame.mouse.get_pressed()[2]
 
+    # A rect following the mouse is created (for collision checking)
     mouse_following_rect = pygame.Rect(mouse_x, mouse_y, 1, 1)
 
+    # Mining state and mining progression is checked.
     update_mining(left_mouse_pressed, mouse_x, mouse_y)
     update_progression()
 
-    #Checking 7x7 blocks around player
+    # Checking 7x7 blocks around player
     if right_mouse_pressed:
         for a in range(7):
             for b in range(7):
@@ -712,7 +713,7 @@ while not done:
                 black_rect = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size), block_size, block_size)
                 pygame.draw.rect(screen,black,black_rect)
 
-    # DRAWING THE PLAYER
+    # DRAWING THE PLAYER (SLIME)
     slime_frame += 0.1
     if slime_frame >= 5:
         slime_frame = 0
@@ -767,12 +768,14 @@ while not done:
     black_rect = pygame.Rect(0, screen_height - (pos_y * block_size), screen_width, screen_height//2)
     pygame.draw.rect(screen, black, black_rect)
 
+    # Mining progress is drawn
     draw_mining_progress()
 
     # DRAWING THE HOTBAR
     draw_hotbar()
     draw_progression()
 
+    # Rendering if pos_x grows.
     if pos_x > new_render_positive:
         new_render_positive += 1
         x_octave1 = (41 + new_render_positive) / scale_octave1
@@ -833,9 +836,10 @@ while not done:
                 elif diggers_positive_pos[y][0] >= 59:
                     diggers_positive_pos[y][0] += random.randint(-2, 0)
 
-# Ore generation
+        # Ore generation
         generate_ores_for_column(83 + new_render_positive - new_render_negative)
 
+        # Tree generation
         next_tree -= 1
         one_percent = random.randint(1, 100)
         if one_percent == 100:
@@ -872,7 +876,7 @@ while not done:
             if tree_density_mode == 3:
                 next_tree = random.randint(4, 8)
 
-
+    # Rendering if pos_x grows in the negative.
     if pos_x <= new_render_negative:
         rendering_offset += 1
         new_render_negative -= 1
@@ -935,9 +939,10 @@ while not done:
                 elif diggers_negative_pos[y][0] >= 59:
                     diggers_negative_pos[y][0] += random.randint(-2, 0)
 
-# ore generation
+        # Ore generation
         generate_ores_for_column(0)
 
+        # Tree generation
         next_tree_negative -= 1
         one_percent = random.randint(1, 100)
         if one_percent == 100:
@@ -968,13 +973,14 @@ while not done:
             if tree_density_mode_negative == 3:
                 next_tree_negative = random.randint(4, 8)
 
-    rendering_point = math.ceil(pos_x)
-
     # Updating Background Position
     background_x = background_x + 2 * (pos_x - last_frame_pos_x)
 
-
+    # Updating last variables
+    rendering_point = math.ceil(pos_x)
     last_frame_pos_x = pos_x
+
+    # Frame gets drawn.
     pygame.display.flip()
     clock.tick(FPS)
 pygame.quit()
