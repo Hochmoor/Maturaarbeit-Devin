@@ -29,10 +29,9 @@ player_size = block_size
 player_rect = pygame.Rect(screen_width//2 - 0.5 * player_size, screen_height//2 - 0.5 * player_size, player_size, player_size)
 player_rect_right_original = player_rect.right
 player_rect_top_original = player_rect.top
-print("player_rect_right_original",player_rect_right_original)
-print("player_rect_top_original",player_rect_top_original)
+
 pos_x = 0
-pos_y = -40
+pos_y = -60
 last_frame_pos_x = pos_x
 last_frame_pos_y = pos_y
 mov_x = 0
@@ -43,7 +42,7 @@ gravity = 0.025
 jump_speed = 0.26       # Start with a low jump (just over one block).
 move_acceleration = 0.025
 max_run_speed = 0.10    # Movement improves after stages 2, 4 and 6.
-max_fall_speed = 8
+max_fall_speed = 1
 air_drag = 0.92
 ground_friction = 0.80
 
@@ -149,10 +148,7 @@ tree_type_mode_negative = random.randint(1,2)
 
 next_tree = random.randint(2,5)
 next_tree_negative = random.randint(2,5)
-print("next_tree",next_tree)
 
-print("len(tree)",len(tree))
-print("len(tree[0])",len(tree[0]))
 
 white = (255, 255, 255)
 black = (0, 0, 0)
@@ -289,7 +285,7 @@ offset = 0
 
 # HOTBAR / MINED BLOCK COUNTS
 # mined_blocks keeps track of how many blocks the player has available and is also used for progression.
-mined_blocks = {1: 100, 2: 100, 3: 0, 4: 100, 5: 100, 6: 100, 7: 100, 8: 100, 9: 100, 10: 100, 11: 100, 12: 100}
+mined_blocks = {1: 100, 2: 100, 3: 100, 4: 100, 5: 100, 6: 100, 7: 100, 8: 100, 9: 100, 10: 100, 11: 100, 12: 100}
 block_names = {1: "Grass", 2: "Dirt", 3: "Stone", 4: "Deep Rock", 5: "Magma", 6: "Leaf Light", 7: "Leaf Dark", 8: "Wood", 9: "Copper", 10: "Iron", 11: "Diamond", 12: "Mysticite"}
 block_images = {1: grass_img, 2: dirt_img, 3: stone_img, 4: deep_rock_img, 5: magma_img, 6: leaf_light_img, 7: leaf_dark_img, 8: wood_img, 9: copper_img, 10: iron_img, 11: diamond_img, 12: mysticite_img}
 placeable_blocks = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12]  # Every block except unmineable magma
@@ -476,7 +472,6 @@ for z in range(84):
     elif noise_value > 5:
         noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
 
-    print("noise value",noise_value)
     blocks_pos_height.append(40 + noise_value)
     blocks_pos[z][40 + noise_value] = 1
     blocks_pos[z][40 + noise_value - 1 ] = 2
@@ -498,7 +493,6 @@ for z in range(84):
     blocks_pos[z][1] = random.choices([4, 5], [30, 70])[0]
     blocks_pos[z][0] = 5
 
-print("height",blocks_pos_height)
 
 for z in range(84):
     for y in range (len(diggers_positive_pos)):
@@ -544,7 +538,6 @@ for z in range(74): # 74 because blocks pos is 84 rows long and I want 5 blocks 
         elif noise_value > 5:
             noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
         ground_height = noise_value
-        print("noise value",noise_value)
 
         if tree_type_mode == 1:
             for a in range(len(tree)):
@@ -716,17 +709,27 @@ while not done:
     if right_mouse_pressed:
         for a in range(7):
             for b in range(7):
-                x = 38 + rendering_offset + rendering_point + a
-                y = -math.ceil(pos_y - 15) + b
+                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0:
+                    blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] -= 1
 
-                if blocks_pos[x][y] in (0, 0.5):
-                    rect_1 = pygame.Rect((a + 38 - pos_x) * block_size - block_size * 10,
-                                         screen_height - block_size - y * block_size - (pos_y * block_size),
-                                         block_size, block_size)
-                    if rect_1.colliderect(mouse_following_rect) and not rect_1.colliderect(player_rect):
-                        if mined_blocks[selected_block] > 0:
-                            blocks_pos[x][y] = selected_block
-                            mined_blocks[selected_block] -= 1
+                if blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] == 0.5:
+                    blocks_pos[38 + rendering_offset + rendering_point + a][-math.ceil(pos_y - 15) + b] *= -1
+
+    blocks_in_range_mouse = [] # Emptying the list
+    for z in range(84):
+        for y in range(world_height):
+            if blocks_pos[z + rendering_point + rendering_offset][y] < 0: # Finding the blocks made negative by the 7x7 Box
+                # Create the Rect object: (x, y, width, height)
+                rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), block_size, block_size)
+                blocks_in_range_mouse.append(rect_1)
+                if blocks_pos[z + rendering_point + rendering_offset][y] == -1:
+                    blocks_pos[z + rendering_point + rendering_offset][y] = 0
+                if blocks_pos[z + rendering_point + rendering_offset][y] == - 0.5:
+                    blocks_pos[z + rendering_point + rendering_offset][y] *= -1  # putting it back to the original state 0 = Air
+                if rect_1.colliderect(mouse_following_rect) and not rect_1.colliderect(player_rect):
+                    if mined_blocks[selected_block] > 0:
+                        blocks_pos[z + rendering_point + rendering_offset][y] = selected_block
+                        mined_blocks[selected_block] -= 1
 
 # Drawing the black rects separately so they appear behind the player.
     for z in range(84):
@@ -798,7 +801,6 @@ while not done:
 
     if pos_x > new_render_positive:
         new_render_positive += 1
-        print("NRP and pos_x", new_render_positive, pos_x)
         x_octave1 = (42 + new_render_positive) / scale_octave1
         x_octave2 = (42 + new_render_positive) / scale_octave2
         x_octave3 = (42 + new_render_positive) / scale_octave3
@@ -807,9 +809,7 @@ while not done:
             noise_value += round(get_noise_octave3(x_octave3) * amplitude_octave3)
         elif noise_value > 5:
             noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
-        print("noise value",noise_value)
         blocks_pos_height.append(40 + noise_value)
-        print("blocks_pos_height", blocks_pos_height)
         blocks_pos.append([0 for _ in range(world_height)])
         blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value] = 1
         blocks_pos[83 + new_render_positive - new_render_negative][40 + noise_value - 1] = 2
@@ -879,7 +879,6 @@ while not done:
             elif noise_value > 5:
                 noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
             ground_height = noise_value
-            print("noise value", noise_value)
             if tree_type_mode == 1:
                 for a in range(len(tree)):
                     for b in range(len(tree[a])):
@@ -903,7 +902,7 @@ while not done:
     if pos_x <= new_render_negative:
         rendering_offset += 1
         new_render_negative -= 1
-        print("NRN and pos_x",new_render_negative,pos_x)
+
         x_octave1 = (-42 + new_render_negative) / scale_octave1
         x_octave2 = (-42 + new_render_negative) / scale_octave2
         x_octave3 = (-42 + new_render_negative) / scale_octave3
@@ -912,9 +911,9 @@ while not done:
             noise_value += round(get_noise_octave3(x_octave3) * amplitude_octave3)
         elif noise_value > 5:
             noise_value += round(get_noise_octave3(x_octave3) * 0.5 * amplitude_octave3)
-        print("noise value", noise_value)
+
         blocks_pos_height.insert(0,40 + noise_value)
-        print("blocks_pos_height",blocks_pos_height)
+
         blocks_pos.insert(0,[0 for _ in range(world_height)])
 
         blocks_pos[0][40 + noise_value] = 1
@@ -1004,6 +1003,5 @@ while not done:
     last_frame_pos_x = pos_x
     last_frame_pos_y = pos_y
     pygame.display.flip()
-    print("FPS",clock.get_fps())
     clock.tick(speed)
 pygame.quit()
