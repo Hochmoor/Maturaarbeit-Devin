@@ -33,7 +33,7 @@ seed_values_octave_3 = [random.uniform(-1, 1) for _ in range(98)]
 
 # Player settings
 player_size = block_size
-player_rect = pygame.Rect(screen_width//2 - 0.5 * player_size, screen_height//2 - 0.5 * player_size, player_size, player_size) # puts the player exactly in the Middle of the Screen.
+player_rect = pygame.Rect(screen_width//2 - 0.5 * player_size, screen_height//2 - 0.5 * player_size, player_size, player_size) # puts player exactly in the middle of the screen.
 player_rect_right_original = player_rect.right
 player_rect_top_original = player_rect.top
 
@@ -44,9 +44,9 @@ last_frame_pos_x = pos_x
 mov_x = 0
 mov_y = 0
 gravity = 0.025
-jump_speed = 0.26       # Start with a low jump (just over one block).
+jump_speed = 0.26 # Start with a low jump (just over one block, increases after stages 2,4,6)
 move_acceleration = 0.025
-max_run_speed = 0.10    # Movement improves after stages 2, 4 and 6.
+max_run_speed = 0.10 # Capped movement speed (increases after stages 2,4,6)
 max_fall_speed = 1
 ground_friction = 0.80
 
@@ -133,10 +133,10 @@ black = (0, 0, 0)
 clock = pygame.time.Clock()
 
 # World Generation
-new_render_positive = 0 # This point keeps track of where the Player has been and if there needs to be a new render when player goes into unrendered territory.
-new_render_negative = 0 # This point keeps track of where the Player has been and if there needs to be a new render when player goes into unrendered territory.
-rendering_point = 0 # This is a rounded Version of the X coordinate to decide together with renderin_offset which part of the blocks_pos list to use.
-rendering_offset = 0 # This variable keeps track of the offset which builds up as the player explores into negative pos_x territory and new renders are added in the beginning of the list.
+new_render_positive = 0 # This point keeps track of where the player has been and if there needs to be a new render when player goes into unrendered territory.
+new_render_negative = 0 # This point keeps track of where the player has been and if there needs to be a new render when player goes into unrendered territory.
+rendering_point = 0 # This is a rounded Version of the X coordinate to decide together with rendering_offset which part of the blocks_pos list to use.
+rendering_offset = 0 # This variable keeps track of the offset which builds up as the player explores into negative pos_x territory.
 
 # Cave Generation
 max_diggers = 2
@@ -199,7 +199,8 @@ ore_cluster_gap = 2 # Minimal distance between ores
 # Checking distance to nearby ores
 def ore_cluster_nearby(x, y):
     for check_x in range(max(0, x - ore_cluster_gap),# max is used to prevent the value from going negative
-                         min(len(blocks_pos), x + ore_cluster_gap + 1)):# min is used to take the lower value and prevents checking of blocks pos positions that aren't generated yet. +1 is because ranges (3,5) don't include 5.
+                         # min is used to take the lower value and prevents checking of blocks pos positions that aren't generated yet. +1 is because ranges (3,5) don't include 5.
+                         min(len(blocks_pos), x + ore_cluster_gap + 1)):
         for check_y in range(max(0, y - ore_cluster_gap), # max avoids checking under 0
                              min(world_height, y + ore_cluster_gap + 1)): # min avoids checking over world height
             if abs(check_x - x) + abs(check_y - y) <= ore_cluster_gap: # adding the two absolute values
@@ -213,7 +214,8 @@ def try_generate_ore_vein(x, ore_type, host_block, chance):
 
     possible_starts = []
     for y in range(world_height):
-        if blocks_pos[x][y] == host_block and not ore_cluster_nearby(x, y): #checks if on right block (stone for iron/ deep rock for diamond) and if there are other clusters nearby.
+        # checks if on right block (stone for iron/ deep rock for diamond) and if there are other clusters nearby.
+        if blocks_pos[x][y] == host_block and not ore_cluster_nearby(x, y):
             possible_starts.append((x, y))
 
     if not possible_starts: # a list gives the boolean false if empty. So if no possible starts are found the function is left.
@@ -230,7 +232,9 @@ def try_generate_ore_vein(x, ore_type, host_block, chance):
                                    (vein_x, vein_y + 1), (vein_x, vein_y - 1)): # checking the four directly attached blocks.
                 if 0 <= next_x < len(blocks_pos) and 0 <= next_y < world_height: # Preventing the next ore to be placed in impossible pos_x
                     if (next_x, next_y) not in vein_positions: # prevents using a block twice
-                        if blocks_pos[next_x][next_y] == host_block and not ore_cluster_nearby(next_x, next_y): #checking for the right host_block and if there are clusters nearby. # doesn't see the blocks of the vein being placed at the moment because the block values haven't switched yet.
+                        # checking for the right host_block and if there are clusters nearby.
+                        # doesn't see the blocks of the vein being placed at the moment because the block values haven't switched yet.
+                        if blocks_pos[next_x][next_y] == host_block and not ore_cluster_nearby(next_x, next_y):
                             possible_next_blocks.append((next_x, next_y))
 
         if not possible_next_blocks:
@@ -260,7 +264,8 @@ def generate_ores_for_column(x):
 # mined_blocks keeps track of how many blocks the player has available and is also used for progression.
 mined_blocks = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0}
 block_names = {1: "Grass", 2: "Dirt", 3: "Stone", 4: "Deep Rock", 5: "Magma", 6: "Leaf Light", 7: "Leaf Dark", 8: "Wood", 9: "Copper", 10: "Iron", 11: "Diamond", 12: "Mysticite"}
-block_images = {1: grass_img, 2: dirt_img, 3: stone_img, 4: deep_rock_img, 5: magma_img, 6: leaf_light_img, 7: leaf_dark_img, 8: wood_img, 9: copper_img, 10: iron_img, 11: diamond_img, 12: mysticite_img}
+block_images = {1: grass_img, 2: dirt_img, 3: stone_img, 4: deep_rock_img, 5: magma_img, 6: leaf_light_img,
+                7: leaf_dark_img, 8: wood_img, 9: copper_img, 10: iron_img, 11: diamond_img, 12: mysticite_img}
 placeable_blocks = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12]  # Every block except unmineable magma
 selected_block = 3 # The block that is outlined in the hotbar when the game is started.
 
@@ -306,7 +311,7 @@ def update_progression(): # Checks once per frame if a new stage is unlocked.
         completed_stages += 1 # If it doesn't break this means the next stage is completed so completed stages += 1
         if completed_stages == 6:
             mining_time_multiplier = 0.0  # 0.0 for instant mining
-            final_time = pygame.time.get_ticks() - game_start_time # Now that stage 6 is completed the final time is calculated by subtracting the startup time from the time overall.
+            final_time = pygame.time.get_ticks() - game_start_time # the final time is calculated by subtracting the startup time from the time overall.
             reward = "Instant mining + faster movement + higher jumps!"
         else:
             mining_time_multiplier /= 2
@@ -332,7 +337,8 @@ def update_progression(): # Checks once per frame if a new stage is unlocked.
 
 def update_mining(left_mouse_pressed, mouse_x, mouse_y): #Inputs: Is mouse pressed?, position of mouse.
     # Making some variables global allows the function to assign new values to these existing variables
-    global mining_target, mining_started_at, mining_progress, mining_rect #Block being mined, when the mining started, value between 0 and 1 for progress, the rectangle for the progress bar.
+    # Block being mined, when the mining started, value between 0 and 1 for progress, the rectangle for the progress bar.
+    global mining_target, mining_started_at, mining_progress, mining_rect
 
     target = None
     mining_rect = None
@@ -539,15 +545,18 @@ def build_blocks_in_range(cur_pos_x, cur_pos_y): # cur is for current because po
     for a in range(3):  # This creates a 3x3 box around the player where collision will be checked
         for b in range(3):
             if 2 <= blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(cur_pos_y - 17) + b] <= 1000:
-                blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(cur_pos_y - 17) + b] *= -1  # Make the number negative to be detected when listing them in blocks_in_range (to later check collisions with colliderect)
+                # Make the number negative to be detected when listing them in blocks_in_range (to later check collisions with colliderect)
+                blocks_pos[40 + rendering_offset + rendering_point + a][-math.ceil(cur_pos_y - 17) + b] *= -1
 
     for z in range(84):
         for y in range(world_height):
             if blocks_pos[z + rendering_point + rendering_offset][y] < 0:
                 # 1. Create the Rect object: (x, y, width, height)
-                rect_1 = pygame.Rect((z - cur_pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (cur_pos_y * block_size), block_size, block_size)
+                rect_1 = pygame.Rect((z - cur_pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (cur_pos_y * block_size),
+                                     block_size, block_size)
                 blocks_in_range.append(rect_1)
-                blocks_pos[z + rendering_point + rendering_offset][y] *= -1  # putting it back to the original state so the Block gets displayed with the right texture once the player moves away from it
+                # putting it back to the original state so the Block gets displayed with the right texture.
+                blocks_pos[z + rendering_point + rendering_offset][y] *= -1
     return blocks_in_range
 
 
@@ -696,7 +705,8 @@ while not done:
         for y in range(world_height):
             if blocks_pos[z + rendering_point + rendering_offset][y] < 0: # Finding the blocks made negative by the 7x7 Box
                 # Create the Rect object: (x, y, width, height)
-                rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size), block_size, block_size)
+                rect_1 = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height - block_size - y * block_size - (pos_y * block_size),
+                                     block_size, block_size)
                 if blocks_pos[z + rendering_point + rendering_offset][y] == -1:
                     blocks_pos[z + rendering_point + rendering_offset][y] = 0
                 if blocks_pos[z + rendering_point + rendering_offset][y] == - 0.5:
@@ -710,7 +720,8 @@ while not done:
     for z in range(84):
         for y in range(world_height):
             if blocks_pos[z + rendering_point + rendering_offset][y] == 0.5:
-                black_rect = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size), block_size, block_size)
+                black_rect = pygame.Rect((z - pos_x + rendering_point) * block_size - block_size * 10, screen_height- block_size - y*block_size - (pos_y * block_size),
+                                         block_size, block_size)
                 pygame.draw.rect(screen,black,black_rect)
 
     # DRAWING THE PLAYER (SLIME)
@@ -811,11 +822,16 @@ while not done:
 
         for y in range(len(diggers_positive_pos)):
             if diggers_positive_pos[y][0] <= 64:
-                if blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0]] != 0 and blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0]] != 1:
+                if (blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0]] != 0
+                        and blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0]] != 1):
                     blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0]] = 0.5
-                if blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] - 1] != 0 and blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] - 1] != 1:
+
+                if (blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] - 1] != 0
+                        and blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] - 1] != 1):
                     blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] - 1] = 0.5
-                if blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] + 1] != 0 and blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] + 1] != 1:
+
+                if (blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] + 1] != 0
+                        and blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] + 1] != 1):
                     blocks_pos[83 + new_render_positive - new_render_negative][diggers_positive_pos[y][0] + 1] = 0.5
 
 
@@ -860,13 +876,15 @@ while not done:
             if tree_type_mode == 1:
                 for a in range(len(tree)):
                     for b in range(len(tree[a])):
-                        if blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] == 0 or blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] == 1:
+                        if (blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] == 0
+                                or blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] == 1):
                             blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] = tree[a][b]
 
             if tree_type_mode == 2:
                 for a in range(len(tree_2)):
                     for b in range(len(tree_2[a])):
-                        if blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] == 0 or blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] == 1:
+                        if (blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] == 0
+                                or blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] == 1):
                             blocks_pos[a + 83 - 5 + new_render_positive - new_render_negative][b + ground_height + 40] = tree_2[a][b]
 
             if tree_density_mode == 1:
