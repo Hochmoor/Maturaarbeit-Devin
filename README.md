@@ -5,9 +5,9 @@ Most other programs use Pygame aswell but might use different textures.
 
 # What the different programs do
 
-Version FINAL: Polished final version 
-Version 1: This is where most of the development happened
-Prototypes: Early tests and demonstrators of different elements of the final game.
+- Version FINAL: Polished final version 
+- Version 1: This is where most of the development happened
+- Prototypes: Early tests and demonstrators of different elements of the final game.
 
 This project was developed as the practical part of my Matura thesis on procedural content generation (PCG).
 
